@@ -5,6 +5,7 @@
 	#include "stm32f091xc.h"
 	
 	#include "stdint.h"
+	#include "gpio.h"
 	
 /* I2C slave address to communicate with */
 #define TMP275_ADDRESS	(uint32_t)0x48

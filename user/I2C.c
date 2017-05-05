@@ -1,5 +1,6 @@
 #include "I2C.h"
 
+
 	/**
   * @brief  This function :
              - Enables GPIO clock
@@ -17,13 +18,16 @@ void I2C2GPIOConfigure(void)
   /* (1) Open drain for I2C signals */
   /* (2) AF1 for I2C signals */
   /* (3) Select AF mode (10) on PB10 and PB11 */
-  GPIOB->OTYPER |= GPIO_OTYPER_OT_10 | GPIO_OTYPER_OT_11; /* (1) */
-//	GPIOB->PUPDR |= GPIO_PUPDR_PUPDR10_0 | GPIO_PUPDR_PUPDR11_0;
-  GPIOB->AFR[1] = (GPIOB->AFR[1] &~ (GPIO_AFRH_AFRH2 | GPIO_AFRH_AFRH3)) \
-                  | (1 << (2 * 4)) | (1 << (3 * 4)); /* (2) */
-  GPIOB->MODER = (GPIOB->MODER & ~(GPIO_MODER_MODER10 | GPIO_MODER_MODER11)) \
-                 | (GPIO_MODER_MODER10_1 | GPIO_MODER_MODER11_1); /* (3) */
-  
+	
+	set_otyper_port_pin(GPIOB, 10, OTYPER_OPEN_DRAIN);	/* (1) */
+	set_otyper_port_pin(GPIOB, 11, OTYPER_OPEN_DRAIN);	/* (1) */
+ 
+	set_alternate_function_port_pin(GPIOB, 10, ALT_FUNC_1);	/* (2) */
+	set_alternate_function_port_pin(GPIOB, 11, ALT_FUNC_1);	/* (2) */
+
+	set_moder_port_pin(GPIOB, 10, PIN_MODER_ALT_FUNC);	/* (3) */
+	set_moder_port_pin(GPIOB, 11, PIN_MODER_ALT_FUNC);	/* (3) */
+	
 }
 
 void I2C2MasterConfigure(I2C_TypeDef* pI2C)

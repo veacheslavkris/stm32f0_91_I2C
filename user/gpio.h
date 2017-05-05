@@ -8,7 +8,9 @@
 
 
 #define MODER_MASK				MASK_2_BITS
-#define PIN_MODE_OUTPUT		((uint32_t)0x00000001U)
+#define PIN_MODER_OUTPUT		((uint32_t)0x00000001U)
+#define PIN_MODER_ALT_FUNC	((uint32_t)0x00000002U)
+
 
 #define OTYPER_MASK					MASK_1_BIT
 #define OTYPER_PUSH_PULL		((uint32_t)0x00000000U)
@@ -47,38 +49,14 @@
 #define ALT_FUNC_7	((uint32_t)0x00000007U)
 
 
+void set_moder_port_pin(GPIO_TypeDef* port, uint32_t pin, uint32_t mode);
 
+void set_otyper_port_pin(GPIO_TypeDef* port, uint32_t pin, uint32_t otype);
 
+void clear_pullup_pulldown_mode_port_pin(GPIO_TypeDef* port, uint32_t pin);
+void set_pullup_pulldown_mode_port_pin(GPIO_TypeDef* port, uint32_t pin, uint32_t pullupdown_mode);
 
-
-
-
-//typedef struct
-//{
-//	GPIO_TypeDef* port;
-//	uint32_t pin;
-//	uint32_t mode;
-//	uint32_t speed;
-//	uint32_t
-//	
-
-//}GpioPortPin;
-
-
-
-
-__INLINE void set_output_mode_port_pin(GPIO_TypeDef* port, uint32_t pin);
-//__INLINE void set_pushpul_mode_port_pin(GPIO_TypeDef* port, uint32_t pin);
-__INLINE void set_otyper_port_pin(GPIO_TypeDef* port, uint32_t pin, uint32_t otype);
-
-
-
-__INLINE void clear_pullup_pulldown_mode_port_pin(GPIO_TypeDef* port, uint32_t pin);
-__INLINE void set_pullup_pulldown_mode_port_pin(GPIO_TypeDef* port, uint32_t pin, uint32_t pullupdown_mode);
-
-__INLINE void set_alternate_function_port_pin(GPIO_TypeDef* port, uint32_t pin, uint32_t alt_func);
-
-
+void set_alternate_function_port_pin(GPIO_TypeDef* port, uint32_t pin, uint32_t alt_func);
 
 void ConfigModeOutputPushPull(GPIO_TypeDef* port, uint32_t pin, uint32_t speed);
 void ConfigInterruptMode(uint32_t exti_port, uint32_t pin);

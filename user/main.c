@@ -81,7 +81,6 @@ int main(void)
      */
 	SetSysClock();
 	
-//	ConfigureGpioLed();
 	init_led_gpio();
   
 	I2C2GPIOConfigure();
@@ -95,8 +94,7 @@ int main(void)
   {
 		if(state_run == 1)
 		{
-//			I2C2MasterSendStartOneByteAutoEnd(TMP275_ADDRESS, REG_TEMP_PTR);
-			
+
 			cur_temp = 0;
 			
 			cur_temp = I2C2MasterSendStartGetTempAutoEnd(I2C2, TMP275_ADDRESS);
@@ -112,7 +110,6 @@ void init_led_gpio(void)
 {
 		RCC->AHBENR |= RCC_AHBENR_GPIOAEN; /* (1) */  
 		ConfigModeOutputPushPull(GPIOA, LED_GREEN_A5_PIN_POS, GPIO_SPEED_MEDIUM);
-
 }
 
 void ConfigureExternalIT(void)
