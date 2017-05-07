@@ -58,17 +58,14 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
-#define LED_GREEN_A5_PIN_POS 	5
-#define LED_GREEN_A5_PIN			GPIO_ODR_5
-#define BTN_C13_PIN_POS 			13
-
-
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
+	uint32_t state_run = 0;
+	float cur_temp = 0;
+
+
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
-uint32_t state_run = 0;
-float cur_temp = 0;
 
 
 int main(void)
@@ -89,6 +86,11 @@ int main(void)
 	
 	ConfigureExternalIT();
 
+	/* MAX 7219 */ 
+	start_max7219();
+	
+	SetDigitSegmentMax7219(ADDR_DIG_0, DIGIT_0);
+	SetDigitSegmentMax7219(ADDR_DIG_4, DIGIT_4);
 	
   while (1) /* Infinite loop */
   {
@@ -103,6 +105,15 @@ int main(void)
 		}
   }
 
+}
+
+void start_max7219()
+{
+	init_max7219_gpio();
+	
+	InitMax7219();
+
+	ClearAllDigitsMax7219();
 }
 
 
@@ -121,6 +132,40 @@ void ConfigureExternalIT(void)
 		NVIC_SetPriority(EXTI4_15_IRQn,0); /* (7) */
 }
 
+void init_max7219_gpio(void)
+{
+	RCC->AHBENR |= RCC_AHBENR_GPIOCEN; 
+		
+	ConfigModeOutputPushPull(GPIOC, PIN_CLK_PC0_POS, GPIO_SPEED_MEDIUM);
+	ConfigModeOutputPushPull(GPIOC, PIN_DOUT_PC1_POS, GPIO_SPEED_MEDIUM);
+	ConfigModeOutputPushPull(GPIOC, PIN_LATCH_PC3_POS, GPIO_SPEED_MEDIUM);
+}
+
+void LatchMax7219Off(void)
+{
+	GPIOC->BRR = GPIO_BRR_BR_3;
+}
+
+void LatchMax7219On(void)
+{
+	GPIOC->BSRR = GPIO_BSRR_BS_3;
+}
+
+void ClkMax7219Off(void)
+{
+	GPIOC->BRR = GPIO_BRR_BR_0;
+}
+
+void ClkMax7219On(void)
+{
+	GPIOC->BSRR = GPIO_BSRR_BS_0;
+}
+
+void SetDataPin(uint32_t val)
+{
+	if(val) GPIOC->BSRR = GPIO_BSRR_BS_1;
+	else GPIOC->BRR = GPIO_BRR_BR_1;
+}
 
 /******************************************************************************/
 /*            Cortex-M0 Processor Exceptions Handlers                         */
