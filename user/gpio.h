@@ -26,8 +26,13 @@
 #define OSPEEDR_CLEAR		((uint32_t)0x00000000U)
 
 
-#define PULLUPDOWN_MASK		MASK_2_BITS
-#define PULLUPDOWN_CLEAR	((uint32_t)0x00000000U)
+#define PUPDR_MASK		MASK_2_BITS
+#define PUPDR_CLEAR	((uint32_t)0x00000000U)
+#define PUPDR_PULLUP			((uint32_t)0x00000001U)
+#define PUPDR_PULLDOWN		((uint32_t)0x00000002U)
+
+
+
 
 #define ALT_FUNCTION_CLEAR	((uint32_t)0x00000000U)
 
@@ -63,6 +68,8 @@ void gpio_init(GPIO_TypeDef* port, uint32_t pin, uint32_t mode, uint32_t otype, 
 
 void GpioSetModeOutputStrong(GPIO_TypeDef* port, uint32_t pin, uint32_t speed);
 void GpioSetModeI2C(GPIO_TypeDef* port, uint32_t pin, uint32_t alt_finc_nm);
+void GpioSetModeUart(GPIO_TypeDef* port, uint32_t pin, uint32_t alt_finc_nm);
+
 void GpioSetInterruptMode(uint32_t exti_port, uint32_t pin, uint32_t edge_itr);
 
 

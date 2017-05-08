@@ -165,8 +165,8 @@ UartReceivedChar* UartGetReceivedChar(USART_TypeDef* UART);
 
 
 void UartConfigure(USART_TypeDef* UART, uint32_t apb1_clk, uint32_t brr);
-void Configure_USART8_PC(void);
-void Configure_USART_7_8_IT(void);
+//void Configure_USART8_PC(void);
+//void Configure_USART_7_8_IT(void);
 
 
 void UartSendCharCR(USART_TypeDef* UART, uint8_t);

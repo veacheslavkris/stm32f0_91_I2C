@@ -12,7 +12,7 @@ __INLINE void gpio_init(GPIO_TypeDef* port, uint32_t pin, uint32_t mode, uint32_
 	port->OSPEEDR = (port->OSPEEDR & (~(OSPEEDR_MASK << (pin*2))))|(speed << (pin*2));
 
 	// 3. set pullup pulldown
-	port->PUPDR = (port->PUPDR & (~(PULLUPDOWN_MASK << (pin*2)))) | (pullupdown << (pin*2));
+	port->PUPDR = (port->PUPDR & (~(PUPDR_MASK << (pin*2)))) | (pullupdown << (pin*2));
 	
 	// 4. set alternate function
 	if(mode & MODER_ALT_FUNC)
@@ -73,17 +73,20 @@ void set_alternate_function_port_pin(GPIO_TypeDef* port, uint32_t pin, uint32_t 
 
 void GpioSetModeOutputStrong(GPIO_TypeDef* port, uint32_t pin, uint32_t speed)
 {
-	gpio_init(port, pin, MODER_OUTPUT, OTYPER_PUSH_PULL, OSPEEDR_MEDIUM, PULLUPDOWN_CLEAR, ALT_FUNCTION_CLEAR);
+	gpio_init(port, pin, MODER_OUTPUT, OTYPER_PUSH_PULL, OSPEEDR_MEDIUM, PUPDR_CLEAR, ALT_FUNCTION_CLEAR);
 }
 
 
 void GpioSetModeI2C(GPIO_TypeDef* port, uint32_t pin, uint32_t alt_finc_nm)
 {
-	gpio_init(port, pin, MODER_ALT_FUNC, OTYPER_OPEN_DRAIN, OSPEEDR_CLEAR, PULLUPDOWN_CLEAR, alt_finc_nm);
+	gpio_init(port, pin, MODER_ALT_FUNC, OTYPER_OPEN_DRAIN, OSPEEDR_CLEAR, PUPDR_CLEAR, alt_finc_nm);
 }
 
 
-
+void GpioSetModeUart(GPIO_TypeDef* port, uint32_t pin, uint32_t alt_finc_nm)
+{
+	gpio_init(port, pin, MODER_ALT_FUNC, OTYPER_PUSH_PULL, OSPEEDR_HIGH, PUPDR_PULLUP, alt_finc_nm);
+}
 
 
 

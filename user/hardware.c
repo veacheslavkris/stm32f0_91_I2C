@@ -8,9 +8,10 @@ void init_rcc(void)
 	// I2C
 	RCC->AHBENR |= RCC_AHBENR_GPIOBEN;
 	
-	// MAXIM7219, BTN_C13
+	// MAXIM7219, BTN_C13, UART
 	RCC->AHBENR |= RCC_AHBENR_GPIOCEN; 
 }
+//
 
 void HWInitGpio()
 {
@@ -20,14 +21,15 @@ void HWInitGpio()
 	init_I2C_gpio();
 	init_max7219_gpio();
 	init_btn_interrupt();
+	init_uart8_gpio();
 }
-
+//
 
 void init_led_gpio(void)
 {
 	GpioSetModeOutputStrong(GPIOA, LED_GREEN_A5_D_POS, OSPEEDR_MEDIUM);
 }
-
+//
 
 void init_I2C_gpio(void)
 {
@@ -38,7 +40,7 @@ void init_I2C_gpio(void)
 	GpioSetModeI2C(GPIOB, 10, ALT_FUNC_1);
 	GpioSetModeI2C(GPIOB, 11, ALT_FUNC_1);
 }
-
+//
 
 void init_max7219_gpio(void)
 {
@@ -46,6 +48,7 @@ void init_max7219_gpio(void)
 	GpioSetModeOutputStrong(GPIOC, PIN_DOUT_PC1_D_POS, OSPEEDR_MEDIUM);
 	GpioSetModeOutputStrong(GPIOC, PIN_LATCH_PC3_D_POS, OSPEEDR_MEDIUM);
 }
+//
 
 void init_btn_interrupt(void)
 {
@@ -57,3 +60,21 @@ void init_btn_interrupt(void)
 		NVIC_EnableIRQ(EXTI4_15_IRQn); /* (6) */
 		NVIC_SetPriority(EXTI4_15_IRQn,0); /* (7) */
 }
+//
+
+void init_uart8_gpio(void)
+{
+	//  /* (1) Select AF mode (10) on PC2 and PC3 */
+	//  /* (2) AF2 for USART8 signals */
+	GpioSetModeUart(GPIOC, 2, ALT_FUNC_2);
+	GpioSetModeUart(GPIOC, 3, ALT_FUNC_2);
+
+
+}
+//
+
+
+
+
+
+

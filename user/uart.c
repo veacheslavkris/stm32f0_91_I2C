@@ -21,50 +21,6 @@ void send_cr(USART_TypeDef* UART);
 
 //}
 
-//// BT connection
-//void Configure_GPIO_USART7_BT(void)
-//{
-//  /* Enable the peripheral clock of GPIOC */
-////  RCC->AHBENR |= RCC_AHBENR_GPIOCEN;
-//	
-//  /* GPIO configuration for USART7 signals */
-//  /* (1) Select AF mode (10) on PC0 and PC1 */
-//  /* (2) AF1 for USART7 signals */
-//  GPIOC->MODER = (GPIOC->MODER & ~(GPIO_MODER_MODER0|GPIO_MODER_MODER1))\
-//                 | (GPIO_MODER_MODER0_1 | GPIO_MODER_MODER1_1); /* (1) */
-//  GPIOC->AFR[0] = (GPIOC->AFR[0] &~ (GPIO_AFRL_AFRL0 | GPIO_AFRL_AFRL1))\
-////                  | (1) | (1 << (1 * 4)); /* (2) */
-//									| 0x0011; /* 0001 0001 (2) */
-//									
-//}
-
-
-//void Configure_GPIO_USART8_PC(void)
-//{
-//  /* Enable the peripheral clock of GPIOC */
-////  RCC->AHBENR |= RCC_AHBENR_GPIOCEN;
-//	
-//  /* GPIO configuration for USART8 signals */
-//  /* (1) Select AF mode (10) on PC2 and PC3 */
-//  /* (2) AF2 for USART8 signals */
-//  GPIOC->MODER = (GPIOC->MODER & ~(GPIO_MODER_MODER2 | GPIO_MODER_MODER3))\
-//                 | (GPIO_MODER_MODER2_1 | GPIO_MODER_MODER3_1); /* (1) */
-//  GPIOC->AFR[0] = (GPIOC->AFR[0] &~ (GPIO_AFRL_AFRL2 | GPIO_AFRL_AFRL3))\
-////                  | (2 << (2 * 4)) | (2 << (3 * 4)); /* (2) */
-//									| 0x2200; /* 0010 0010 0000 0000 (2) */
-//									
-//}
-
-
-//void Configure_USART_7_8_IT()
-//{
-//  /* Configure IT */
-//  /* (3) Set priority for USART7_IRQn */
-//  /* (4) Enable USART7_IRQn */
-//  NVIC_SetPriority(USART3_8_IRQn, 0); /* (3) */
-//  NVIC_EnableIRQ(USART3_8_IRQn); /* (4) */
-//}
-
 
 void UartConfigure(USART_TypeDef* UART, uint32_t apb1_clk, uint32_t brr)
 {
@@ -76,7 +32,8 @@ void UartConfigure(USART_TypeDef* UART, uint32_t apb1_clk, uint32_t brr)
   /* (2) 8 data bit, 1 start bit, 1 stop bit, no parity, transmit/receive */
 // 	UART->BRR = 6000000 / 38400; /* (1) */
 
- 	UART->BRR = apb1_clk / brr; /* (1) */
+	UART->BRR = 6000000 / 9600; /* (1) */
+// 	UART->BRR = apb1_clk / brr; /* (1) */
 
 	
 	UART->CR1 = USART_CR1_TE |USART_CR1_RE | USART_CR1_UE; /* (2) */

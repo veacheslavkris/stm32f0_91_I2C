@@ -91,6 +91,12 @@ int main(void)
 	
 	I2C2MasterInit(I2C2);
 	
+	/* Enable the peripheral clock USART8 */
+  RCC->APB2ENR |= RCC_APB2ENR_USART8EN;
+	UartConfigure(USART8, 6000000, 9600);	
+	
+	
+	
 	/* MAX 7219 */ 
 	start_max7219();
 	
@@ -99,7 +105,10 @@ int main(void)
 	Max7219_SetDigitSegment(ADDR_DIG_0, DIGIT_0);
 	Max7219_SetDigitSegment(ADDR_DIG_4, DIGIT_0);
 	
-  while (1) /* Infinite loop */
+	
+	UartSendCharCR(USART8, 'A');
+  
+	while (1) /* Infinite loop */
   {
 		if(state_run == 1)
 		{

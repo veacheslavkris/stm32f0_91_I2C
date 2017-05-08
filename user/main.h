@@ -4,6 +4,7 @@
 #include "maxim_7219.h"
 #include "rtc.h"
 #include "hardware.h"
+#include "uart.h"
 
 /* Private define ------------------------------------------------------------*/
 
