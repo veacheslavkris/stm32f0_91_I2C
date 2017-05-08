@@ -45,10 +45,10 @@ typedef struct
 	
 }RTC_BCD_DateTypeDef;
 
-void InitRtcLse(void);
-void SetDateTimeRTC(uint8_t*);
-void GetCurDateTimeRTC_BIN(RTC_TimeTypeDef*, RTC_DateTypeDef*);
-void GetCurDateTimeRTC_BCD(RTC_BCD_TimeTypeDef*, RTC_BCD_DateTypeDef*);
+void RtcInitLse(void);
+void RtcSetDateTime(uint8_t*);
+void RtcGetCurDateTime_BIN(RTC_TimeTypeDef*, RTC_DateTypeDef*);
+void RtcGetCurDateTime_BCD(RTC_BCD_TimeTypeDef*, RTC_BCD_DateTypeDef*);
 
 #endif
 

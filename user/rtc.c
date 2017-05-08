@@ -25,7 +25,7 @@ uint8_t rtc_bcd2byte(uint8_t);
 void set_bcd_date_time(uint8_t*);
 uint8_t rtc_byte2bcd(uint8_t);
 
-void InitRtcLse()
+void RtcInitLse()
 {
 	turn_rtc_lse_on();
 	set_rtc_prediv_lse();
@@ -70,7 +70,7 @@ __INLINE void turn_rtc_lse_on(void)
 
 }
 
-void SetDateTimeRTC(uint8_t* ary_bcd)
+void RtcSetDateTime(uint8_t* ary_bcd)
 {
 	set_bcd_date_time(ary_bcd);
 }
@@ -162,7 +162,7 @@ __INLINE void disable_rtc_init_state(void)
   RTC->WPR = 0x64; /* (7) */
 }
 
-void GetCurDateTimeRTC_BIN(RTC_TimeTypeDef* sttTime, RTC_DateTypeDef* sttDate)
+void RtcGetCurDateTime_BIN(RTC_TimeTypeDef* sttTime, RTC_DateTypeDef* sttDate)
 {
 	uint32_t tmpreg = 0;
 	uint32_t datetmpreg = 0;
@@ -199,7 +199,7 @@ void GetCurDateTimeRTC_BIN(RTC_TimeTypeDef* sttTime, RTC_DateTypeDef* sttDate)
 	sttDate->Date = (uint8_t)rtc_bcd2byte(sttDate->Date);  
 }
 
-void GetCurDateTimeRTC_BCD(RTC_BCD_TimeTypeDef* sttTime, RTC_BCD_DateTypeDef* sttDate)
+void RtcGetCurDateTime_BCD(RTC_BCD_TimeTypeDef* sttTime, RTC_BCD_DateTypeDef* sttDate)
 {
 	uint32_t tmpreg = 0;
 	uint32_t datetmpreg = 0;

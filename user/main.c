@@ -80,8 +80,10 @@ int main(void)
      */
 	SetSysClock();
 	SystemCoreClockUpdate();
-//	SysTick_Config(SystemCoreClock/1000);/* 1ms config with HSE 8MHz/system 48Mhz*/
+	SysTick_Config(SystemCoreClock/1000);/* 1ms config with HSE 8MHz/system 48Mhz*/
 
+	RtcInitLse();
+	
 	init_led_gpio();
   
 	I2C2GPIOConfigure();
@@ -93,7 +95,7 @@ int main(void)
 	/* MAX 7219 */ 
 	start_max7219();
 	
-//	delay_systick(3000);
+	delay_systick(3000);
 	
 	SetDigitSegmentMax7219(ADDR_DIG_0, DIGIT_0);
 	SetDigitSegmentMax7219(ADDR_DIG_4, DIGIT_4);
@@ -208,7 +210,7 @@ void PendSV_Handler(void)
 
 void SysTick_Handler(void)
 {
-//	if(systick_count > 0) systick_count--;
+	if(systick_count > 0) systick_count--;
 	
 }
 

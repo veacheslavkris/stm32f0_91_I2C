@@ -1,12 +1,9 @@
 #include "stm32f0xx.h"
 #include "sys_clock.h"
 #include "gpio.h"
-
-//#include "gpio_led.h"
-//#include "gpio_exti.h"
 #include "I2C.h"
 #include "maxim_7219.h"
-
+#include "rtc.h"
 
 /* Private define ------------------------------------------------------------*/
 #define LED_GREEN_A5_D_POS 		5
