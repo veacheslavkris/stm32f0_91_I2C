@@ -8,8 +8,8 @@
 
 
 #define MODER_MASK				MASK_2_BITS
-#define PIN_MODER_OUTPUT		((uint32_t)0x00000001U)
-#define PIN_MODER_ALT_FUNC	((uint32_t)0x00000002U)
+#define MODER_OUTPUT		((uint32_t)0x00000001U)
+#define MODER_ALT_FUNC	((uint32_t)0x00000002U)
 
 
 #define OTYPER_MASK					MASK_1_BIT
@@ -19,14 +19,20 @@
 
 
 #define OSPEEDR_MASK		MASK_2_BITS
+#define OSPEEDR_LOW			((uint32_t)0x00000000U)
+#define OSPEEDR_MEDIUM	((uint32_t)0x00000001U)
+#define OSPEEDR_HIGH		((uint32_t)0x00000003U)
+
+#define OSPEEDR_CLEAR		((uint32_t)0x00000000U)
+
+
 #define PULLUPDOWN_MASK		MASK_2_BITS
+#define PULLUPDOWN_CLEAR	((uint32_t)0x00000000U)
+
+#define ALT_FUNCTION_CLEAR	((uint32_t)0x00000000U)
 
 
 
-
-#define GPIO_SPEED_LOW		((uint32_t)0x00000000U)
-#define GPIO_SPEED_MEDIUM	((uint32_t)0x00000001U)
-#define GPIO_SPEED_HIGH		((uint32_t)0x00000003U)
 
 #define EXTI_PA	((uint32_t)0x00000000U)
 #define EXTI_PB	((uint32_t)0x00000001U)
@@ -49,22 +55,12 @@
 #define ALT_FUNC_7	((uint32_t)0x00000007U)
 
 
-void set_moder_port_pin(GPIO_TypeDef* port, uint32_t pin, uint32_t mode);
-
-void set_otyper_port_pin(GPIO_TypeDef* port, uint32_t pin, uint32_t otype);
-
-void clear_pullup_pulldown_mode_port_pin(GPIO_TypeDef* port, uint32_t pin);
-void set_pullup_pulldown_mode_port_pin(GPIO_TypeDef* port, uint32_t pin, uint32_t pullupdown_mode);
-
 void set_alternate_function_port_pin(GPIO_TypeDef* port, uint32_t pin, uint32_t alt_func);
+void gpio_init(GPIO_TypeDef* port, uint32_t pin, uint32_t mode, uint32_t otype, uint32_t speed, uint32_t pullupdown_mode, uint32_t alt_func);
 
-void ConfigModeOutputPushPull(GPIO_TypeDef* port, uint32_t pin, uint32_t speed);
-void ConfigInterruptMode(uint32_t exti_port, uint32_t pin);
-
-
-
-
-
+void GpioSetModeOutputStrong(GPIO_TypeDef* port, uint32_t pin, uint32_t speed);
+void GpioSetModeI2C(GPIO_TypeDef* port, uint32_t pin, uint32_t alt_finc_nm);
+void GpioSetInterruptMode(uint32_t exti_port, uint32_t pin);
 
 
 

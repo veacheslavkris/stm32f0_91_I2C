@@ -9,16 +9,17 @@
 
 
 /* Private define ------------------------------------------------------------*/
-#define LED_GREEN_A5_PIN_POS 	5
-#define LED_GREEN_A5_PIN			GPIO_ODR_5
+#define LED_GREEN_A5_D_POS 		5
+#define LED_GREEN_A5_B_POS		GPIO_ODR_5
 #define BTN_C13_PIN_POS 			13
 
-#define PIN_CLK_PC0_POS			((uint32_t)0x00000000)
-#define PIN_DOUT_PC1_POS		((uint32_t)0x00000001)
-#define PIN_LATCH_PC3_POS		((uint32_t)0x00000003)
+#define PIN_CLK_PC0_D_POS			((uint32_t)0)
+#define PIN_DOUT_PC1_D_POS		((uint32_t)1)
+#define PIN_LATCH_PC3_D_POS		((uint32_t)3)
 
 
-
+void delay_systick(uint32_t ms);
+	
 
 void init_led_gpio(void);
 void ConfigureExternalIT(void);

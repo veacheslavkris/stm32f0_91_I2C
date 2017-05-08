@@ -19,14 +19,9 @@ void I2C2GPIOConfigure(void)
   /* (2) AF1 for I2C signals */
   /* (3) Select AF mode (10) on PB10 and PB11 */
 	
-	set_otyper_port_pin(GPIOB, 10, OTYPER_OPEN_DRAIN);	/* (1) */
-	set_otyper_port_pin(GPIOB, 11, OTYPER_OPEN_DRAIN);	/* (1) */
- 
-	set_alternate_function_port_pin(GPIOB, 10, ALT_FUNC_1);	/* (2) */
-	set_alternate_function_port_pin(GPIOB, 11, ALT_FUNC_1);	/* (2) */
+	GpioSetModeI2C(GPIOB, 10, ALT_FUNC_1);
+	GpioSetModeI2C(GPIOB, 11, ALT_FUNC_1);
 
-	set_moder_port_pin(GPIOB, 10, PIN_MODER_ALT_FUNC);	/* (3) */
-	set_moder_port_pin(GPIOB, 11, PIN_MODER_ALT_FUNC);	/* (3) */
 	
 }
 

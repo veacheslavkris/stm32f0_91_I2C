@@ -62,6 +62,8 @@
 /* Private variables ---------------------------------------------------------*/
 	uint32_t state_run = 0;
 	float cur_temp = 0;
+	uint32_t systick_count =0;
+	
 
 
 /* Private function prototypes -----------------------------------------------*/
@@ -77,7 +79,9 @@ int main(void)
        system_stm32f0xx.c file
      */
 	SetSysClock();
-	
+	SystemCoreClockUpdate();
+//	SysTick_Config(SystemCoreClock/1000);/* 1ms config with HSE 8MHz/system 48Mhz*/
+
 	init_led_gpio();
   
 	I2C2GPIOConfigure();
@@ -88,6 +92,8 @@ int main(void)
 
 	/* MAX 7219 */ 
 	start_max7219();
+	
+//	delay_systick(3000);
 	
 	SetDigitSegmentMax7219(ADDR_DIG_0, DIGIT_0);
 	SetDigitSegmentMax7219(ADDR_DIG_4, DIGIT_4);
@@ -107,6 +113,14 @@ int main(void)
 
 }
 
+void delay_systick(uint32_t ms)
+{
+	systick_count = ms;
+	
+	while(systick_count !=0) continue;
+
+}
+
 void start_max7219()
 {
 	init_max7219_gpio();
@@ -119,14 +133,15 @@ void start_max7219()
 
 void init_led_gpio(void)
 {
-		RCC->AHBENR |= RCC_AHBENR_GPIOAEN; /* (1) */  
-		ConfigModeOutputPushPull(GPIOA, LED_GREEN_A5_PIN_POS, GPIO_SPEED_MEDIUM);
+	RCC->AHBENR |= RCC_AHBENR_GPIOAEN; /* (1) */  
+	
+	GpioSetModeOutputStrong(GPIOA, LED_GREEN_A5_D_POS, OSPEEDR_MEDIUM);
 }
 
 void ConfigureExternalIT(void)
 {
 	  SET_BIT(RCC->APB2ENR, RCC_APB2ENR_SYSCFGEN);
-		ConfigInterruptMode(EXTI_PC, BTN_C13_PIN_POS);
+		GpioSetInterruptMode(EXTI_PC, BTN_C13_PIN_POS);
 
 		NVIC_EnableIRQ(EXTI4_15_IRQn); /* (6) */
 		NVIC_SetPriority(EXTI4_15_IRQn,0); /* (7) */
@@ -135,10 +150,10 @@ void ConfigureExternalIT(void)
 void init_max7219_gpio(void)
 {
 	RCC->AHBENR |= RCC_AHBENR_GPIOCEN; 
-		
-	ConfigModeOutputPushPull(GPIOC, PIN_CLK_PC0_POS, GPIO_SPEED_MEDIUM);
-	ConfigModeOutputPushPull(GPIOC, PIN_DOUT_PC1_POS, GPIO_SPEED_MEDIUM);
-	ConfigModeOutputPushPull(GPIOC, PIN_LATCH_PC3_POS, GPIO_SPEED_MEDIUM);
+
+	GpioSetModeOutputStrong(GPIOC, PIN_CLK_PC0_D_POS, OSPEEDR_MEDIUM);
+	GpioSetModeOutputStrong(GPIOC, PIN_DOUT_PC1_D_POS, OSPEEDR_MEDIUM);
+	GpioSetModeOutputStrong(GPIOC, PIN_LATCH_PC3_D_POS, OSPEEDR_MEDIUM);
 }
 
 void LatchMax7219Off(void)
@@ -193,6 +208,8 @@ void PendSV_Handler(void)
 
 void SysTick_Handler(void)
 {
+//	if(systick_count > 0) systick_count--;
+	
 }
 
 /******************************************************************************/
@@ -209,7 +226,7 @@ void EXTI4_15_IRQHandler(void)
     EXTI->PR |= EXTI_PR_PR13; /* Clear the pending bit */
 //    GPIOA->ODR ^= (1<<5); /* Toggle green led on PA5 */
 //		GPIOA->ODR ^= GPIO_ODR_5;
-		GPIOA->ODR ^= LED_GREEN_A5_PIN;
+		GPIOA->ODR ^= LED_GREEN_A5_B_POS;
 		
 		state_run = 1;
   }

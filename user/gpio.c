@@ -3,73 +3,31 @@
 
 
 
-void set_moder_port_pin(GPIO_TypeDef* port, uint32_t pin, uint32_t mode)
+__INLINE void gpio_init(GPIO_TypeDef* port, uint32_t pin, uint32_t mode, uint32_t otype, uint32_t speed, uint32_t pullupdown, uint32_t alt_func)
 {
+	// 1. set otype
+	port->OTYPER =(port->OTYPER & ~(OTYPER_MASK << pin)) | otype << pin;
+	
+	// 2. set speed
+	port->OSPEEDR = (port->OSPEEDR & (~(OSPEEDR_MASK << (pin*2))))|(speed << (pin*2));
 
-	// clear pin's mode 
-	// set pin's mode
+	// 3. set pullup pulldown
+	port->PUPDR = (port->PUPDR & (~(PULLUPDOWN_MASK << (pin*2)))) | (pullupdown << (pin*2));
+	
+	// 4. set alternate function
+	if(mode & MODER_ALT_FUNC)
+	{
+		set_alternate_function_port_pin(port, pin, alt_func);
+	}
+	
+	// 5. set mode
 	port->MODER = (port->MODER & ~(MODER_MASK << (pin*2)))|(mode << (pin*2));
-	
-	
-}
-
-
-
-void set_otyper_port_pin(GPIO_TypeDef* port, uint32_t pin, uint32_t otype)
-{
-	port->OTYPER &= ~(OTYPER_MASK << pin);
-	port->OTYPER |= otype << pin;
-
-}
-
-
-
-void clear_pullup_pulldown_mode_port_pin(GPIO_TypeDef* port, uint32_t pin)
-{
-	port->PUPDR = port->PUPDR & ~(PULLUPDOWN_MASK << (pin*2));
-}
-
-
-void set_pullup_pulldown_mode_port_pin(GPIO_TypeDef* port, uint32_t pin, uint32_t pullupdown_mode)
-{
-	clear_pullup_pulldown_mode_port_pin(port, pin);
-	
-	port->PUPDR|= pullupdown_mode << (pin *2);
-
 }
 
 
 
 
-
-
-
-
-
-void ConfigModeOutputPushPull(GPIO_TypeDef* port, uint32_t pin, uint32_t speed_type)
-{
-	// set output mode
-	set_moder_port_pin(port, pin, PIN_MODER_OUTPUT);
-	
-	
-	
-	// set speed:
-	// - clear pin's speed 
-	// - set pin's speed
-	port->OSPEEDR = (port->OSPEEDR & (~(OSPEEDR_MASK << (pin*2))))|(speed_type << (pin*2));
-	
-	// set pushpull mode
-	set_otyper_port_pin(port, pin, OTYPER_PUSH_PULL);
-	
-	
-	// set no_pullup no_puldown
-	clear_pullup_pulldown_mode_port_pin(port, pin);
-	
-}
-	
-
-
-void ConfigInterruptMode(uint32_t exti_port, uint32_t pin)
+void GpioSetInterruptMode(uint32_t exti_port, uint32_t pin)
 {
 	uint32_t ix = pin >> 2;
 	uint32_t ix_pin = pin;
@@ -88,7 +46,6 @@ void ConfigInterruptMode(uint32_t exti_port, uint32_t pin)
 	EXTI->IMR |= pin_mask;
 	EXTI->RTSR |= pin_mask;
 	EXTI->FTSR |= pin_mask;
-
 }
 
 
@@ -113,12 +70,16 @@ void set_alternate_function_port_pin(GPIO_TypeDef* port, uint32_t pin, uint32_t 
 	port->AFR[ix_af]|= alt_func << rel_ix_pin;
 }
 
+void GpioSetModeOutputStrong(GPIO_TypeDef* port, uint32_t pin, uint32_t speed)
+{
+	gpio_init(port, pin, MODER_OUTPUT, OTYPER_PUSH_PULL, OSPEEDR_MEDIUM, PULLUPDOWN_CLEAR, ALT_FUNCTION_CLEAR);
+}
 
 
-
-
-
-
+void GpioSetModeI2C(GPIO_TypeDef* port, uint32_t pin, uint32_t alt_finc_nm)
+{
+	gpio_init(port, pin, MODER_ALT_FUNC, OTYPER_OPEN_DRAIN, OSPEEDR_CLEAR, PULLUPDOWN_CLEAR, alt_finc_nm);
+}
 
 
 
