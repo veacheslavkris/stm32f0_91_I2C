@@ -126,11 +126,13 @@
 void latch_max7219(void);
 void set_data_bit(uint32_t val);
 void config_max7219(uint8_t reg_addr, uint8_t reg_data);
-void SetDigitSegmentMax7219(uint8_t reg_digit, uint8_t reg_data_seg);
-void send_bits(uint32_t val);
-void InitMax7219(void);
 
-void ClearAllDigitsMax7219(void);
+void send_bits(uint32_t val);
+
+
+void Max7219_SetDigitSegment(uint8_t reg_digit, uint8_t reg_data_seg);
+void Max7219_Init(void);
+void Max7219_ClearAllDigits(void);
 
 
 

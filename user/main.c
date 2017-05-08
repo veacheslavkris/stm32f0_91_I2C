@@ -64,6 +64,7 @@
 	float cur_temp = 0;
 	uint32_t systick_count =0;
 	
+	uint32_t ary_digits[10]= {DIGIT_0,DIGIT_1,DIGIT_2,DIGIT_3,DIGIT_4,DIGIT_5,DIGIT_6,DIGIT_7,DIGIT_8,DIGIT_9};
 
 
 /* Private function prototypes -----------------------------------------------*/
@@ -78,27 +79,25 @@ int main(void)
        To reconfigure the default setting of SystemInit() function, refer to
        system_stm32f0xx.c file
      */
+
+
 	SetSysClock();
 	SystemCoreClockUpdate();
 	SysTick_Config(SystemCoreClock/1000);/* 1ms config with HSE 8MHz/system 48Mhz*/
 
 	RtcInitLse();
 	
-	init_led_gpio();
-  
-	I2C2GPIOConfigure();
-
-	I2C2MasterConfigure(I2C2);
+	HWInitGpio();
 	
-	ConfigureExternalIT();
-
+	I2C2MasterInit(I2C2);
+	
 	/* MAX 7219 */ 
 	start_max7219();
 	
 	delay_systick(3000);
 	
-	SetDigitSegmentMax7219(ADDR_DIG_0, DIGIT_0);
-	SetDigitSegmentMax7219(ADDR_DIG_4, DIGIT_4);
+	Max7219_SetDigitSegment(ADDR_DIG_0, DIGIT_0);
+	Max7219_SetDigitSegment(ADDR_DIG_4, DIGIT_0);
 	
   while (1) /* Infinite loop */
   {
@@ -111,6 +110,9 @@ int main(void)
 			
 			state_run = 0;
 		}
+		
+		cycle_digits();
+		delay_systick(1000);
   }
 
 }
@@ -125,59 +127,56 @@ void delay_systick(uint32_t ms)
 
 void start_max7219()
 {
-	init_max7219_gpio();
+	Max7219_Init();
+
+	Max7219_ClearAllDigits();
+}
+
+void cycle_digits(void)
+{
+	static uint32_t cnt = 0;
 	
-	InitMax7219();
-
-	ClearAllDigitsMax7219();
-}
-
-
-void init_led_gpio(void)
-{
-	RCC->AHBENR |= RCC_AHBENR_GPIOAEN; /* (1) */  
+	static uint32_t ix_digit_4 = 0;
 	
-	GpioSetModeOutputStrong(GPIOA, LED_GREEN_A5_D_POS, OSPEEDR_MEDIUM);
-}
+	if(cnt == 10)
+	{
+		cnt = 0;
+		
+		ix_digit_4++;
+		
+		if(ix_digit_4 == 10)ix_digit_4 = 0;
+	}
 
-void ConfigureExternalIT(void)
-{
-	  SET_BIT(RCC->APB2ENR, RCC_APB2ENR_SYSCFGEN);
-		GpioSetInterruptMode(EXTI_PC, BTN_C13_PIN_POS);
+	
+		
+	Max7219_SetDigitSegment(ADDR_DIG_0, ary_digits[cnt]);
+	Max7219_SetDigitSegment(ADDR_DIG_4, ary_digits[ix_digit_4]);
+	
+	
+	cnt++;
 
-		NVIC_EnableIRQ(EXTI4_15_IRQn); /* (6) */
-		NVIC_SetPriority(EXTI4_15_IRQn,0); /* (7) */
-}
-
-void init_max7219_gpio(void)
-{
-	RCC->AHBENR |= RCC_AHBENR_GPIOCEN; 
-
-	GpioSetModeOutputStrong(GPIOC, PIN_CLK_PC0_D_POS, OSPEEDR_MEDIUM);
-	GpioSetModeOutputStrong(GPIOC, PIN_DOUT_PC1_D_POS, OSPEEDR_MEDIUM);
-	GpioSetModeOutputStrong(GPIOC, PIN_LATCH_PC3_D_POS, OSPEEDR_MEDIUM);
 }
 
 void LatchMax7219Off(void)
 {
 	GPIOC->BRR = GPIO_BRR_BR_3;
 }
-
+//
 void LatchMax7219On(void)
 {
 	GPIOC->BSRR = GPIO_BSRR_BS_3;
 }
-
+//
 void ClkMax7219Off(void)
 {
 	GPIOC->BRR = GPIO_BRR_BR_0;
 }
-
+//
 void ClkMax7219On(void)
 {
 	GPIOC->BSRR = GPIO_BSRR_BS_0;
 }
-
+//
 void SetDataPin(uint32_t val)
 {
 	if(val) GPIOC->BSRR = GPIO_BSRR_BS_1;
@@ -191,7 +190,7 @@ void SetDataPin(uint32_t val)
 void NMI_Handler(void)
 {
 }
-
+//
 void HardFault_Handler(void)
 {
   /* Go to infinite loop when Hard Fault exception occurs */
@@ -199,21 +198,21 @@ void HardFault_Handler(void)
   {
   }
 }
-
+//
 void SVC_Handler(void)
 {
 }
-
+//
 void PendSV_Handler(void)
 {
 }
-
+//
 void SysTick_Handler(void)
 {
 	if(systick_count > 0) systick_count--;
 	
 }
-
+//
 /******************************************************************************/
 /*                 STM32F0xx Peripherals Interrupt Handlers                   */
 /*  Add here the Interrupt Handler for the used peripheral(s) (PPP), for the  */

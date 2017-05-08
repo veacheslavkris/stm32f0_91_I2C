@@ -5,7 +5,7 @@
 	#include "stm32f091xc.h"
 	
 	#include "stdint.h"
-	#include "gpio.h"
+//	#include "gpio.h"
 	
 /* I2C slave address to communicate with */
 #define TMP275_ADDRESS	(uint32_t)0x48
@@ -17,9 +17,9 @@
 #define REG_CONF_PTR     (uint32_t)0x01u
 
 
-void I2C2GPIOConfigure(void);
+//void I2C2GPIOConfigure(void);
 
-void I2C2MasterConfigure(I2C_TypeDef* pI2C);
+void I2C2MasterInit(I2C_TypeDef* pI2C);
 
 uint32_t I2C2MasterSendStartOneByteAutoEnd(I2C_TypeDef* pI2C, uint32_t slaveAddress, uint32_t data_byte);
 	

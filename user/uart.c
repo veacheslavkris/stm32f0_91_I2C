@@ -38,33 +38,6 @@ void send_cr(USART_TypeDef* UART);
 //									
 //}
 
-//void Configure_USART7_BT(void)
-//{
-//  /* Enable the peripheral clock USART7 */
-//  RCC->APB2ENR |= RCC_APB2ENR_USART7EN;
-
-//  /* Configure USART7 */
-//  /* (1) oversampling by 16, 38400 baud */
-//  /* (2) 8 data bit, 1 start bit, 1 stop bit, no parity, transmit/receive */
-// 	USART7->BRR = 6000000 / 38400; /* (1) */
-//	
-//	USART7->CR1 = USART_CR1_TE |USART_CR1_RE | USART_CR1_UE; /* (2) */
-//	
-//  /* polling idle frame Transmission */
-//	while((USART7->ISR & USART_ISR_TC) != USART_ISR_TC)
-//  { 
-//    /* add time out here for a robust application */
-//  }
-//  	
-//	USART7->ICR |= USART_ICR_TCCF;		/* clear TC flag */
-// 
-//	USART7->CR1 |= USART_CR1_TCIE;		/* enable TC interrupt */
-//	USART7->CR1 |= USART_CR1_RXNEIE;	/* enable RXNE interrupt */
-//		
-//	//Configure_USART_7_8_IT
-//}
-
-
 
 //void Configure_GPIO_USART8_PC(void)
 //{
@@ -82,34 +55,6 @@ void send_cr(USART_TypeDef* UART);
 //									
 //}
 
-//void Configure_USART8_PC(void)
-//{
-//  /* Enable the peripheral clock USART8 */
-//  RCC->APB2ENR |= RCC_APB2ENR_USART8EN;
-
-//  /* Configure USART8 */
-//  /* (1) oversampling by 16, 9600 baud */
-//  /* (2) 8 data bit, 1 start bit, 1 stop bit, no parity, transmit/receive */
-// 	USART8->BRR = 6000000 / 9600; /* (1) */
-
-//	USART8->CR1 = USART_CR1_TE |USART_CR1_RE | USART_CR1_UE; /* (2) */
-
-//	
-//  /* polling idle frame Transmission */
-//	while((USART8->ISR & USART_ISR_TC) != USART_ISR_TC)
-//  { 
-//    /* add time out here for a robust application */
-//  }
-//  	
-//	USART8->ICR |= USART_ICR_TCCF;		/* clear TC flag */
-// 
-//	USART8->CR1 |= USART_CR1_TCIE;		/* enable TC interrupt */
-//	USART8->CR1 |= USART_CR1_RXNEIE;	/* enable RXNE interrupt */
-//		
-//	// Configure_USART_7_8_IT
-//}
-
-
 
 //void Configure_USART_7_8_IT()
 //{
@@ -121,11 +66,42 @@ void send_cr(USART_TypeDef* UART);
 //}
 
 
+void UartConfigure(USART_TypeDef* UART, uint32_t apb1_clk, uint32_t brr)
+{
+  /* Enable the peripheral clock USART7 */
+//  RCC->APB2ENR |= RCC_APB2ENR_USART7EN;
+
+  /* Configure UART */
+  /* (1) oversampling by 16, 38400 baud */
+  /* (2) 8 data bit, 1 start bit, 1 stop bit, no parity, transmit/receive */
+// 	UART->BRR = 6000000 / 38400; /* (1) */
+
+ 	UART->BRR = apb1_clk / brr; /* (1) */
+
+	
+	UART->CR1 = USART_CR1_TE |USART_CR1_RE | USART_CR1_UE; /* (2) */
+	
+  /* polling idle frame Transmission */
+	while((UART->ISR & USART_ISR_TC) != USART_ISR_TC) continue;
+//  { 
+//    /* add time out here for a robust application */
+//  }
+  	
+	UART->ICR |= USART_ICR_TCCF;		/* clear TC flag */
+ 
+//	UART->CR1 |= USART_CR1_TCIE;		/* enable TC interrupt */
+//	UART->CR1 |= USART_CR1_RXNEIE;	/* enable RXNE interrupt */
+		
+	//Configure_USART_7_8_IT
+}
+
 __INLINE void send_char(USART_TypeDef* UART, uint8_t ch)
 {
 	UART->TDR = ch;
 	while((UART->ISR & USART_ISR_TXE)!=USART_ISR_TXE) continue;
 }
+
+//
 
 __INLINE void send_char_cr(USART_TypeDef* UART, uint8_t ch)
 {
@@ -134,16 +110,20 @@ __INLINE void send_char_cr(USART_TypeDef* UART, uint8_t ch)
 	send_cr(UART);
 }
 
+//
+
 __INLINE void send_cr(USART_TypeDef* UART)
 {
 	UART->TDR = CR;
 	while((UART->ISR & USART_ISR_TXE)!=USART_ISR_TXE) continue;
 }
+//
 
 void UartSendCharCR(USART_TypeDef* UART, uint8_t ch)
 {
 	send_char_cr(UART, ch);
 }
+//
 
 UartReceivedChar* UartGetReceivedChar(USART_TypeDef* UART)
 {
@@ -186,7 +166,7 @@ UartReceivedChar* UartGetReceivedChar(USART_TypeDef* UART)
 	
 	return &structReceivedChar;
 }
-
+//
 
 void UartSendError(USART_TypeDef* UART, uint8_t err_char)
 {
@@ -204,6 +184,7 @@ void UartSendError(USART_TypeDef* UART, uint8_t err_char)
 	
 	
 }
+//
 
 void UartSendString(USART_TypeDef* UART, char* string, uint32_t count, CR_STATE cr_state)
 {
@@ -216,6 +197,7 @@ void UartSendString(USART_TypeDef* UART, char* string, uint32_t count, CR_STATE 
 	
 	if(cr_state == CR_ON) send_cr(UART);
 }
+//
 
 void UartSendBytes(USART_TypeDef* UART, uint8_t* bytes, uint32_t count, CR_STATE cr_state)
 {
@@ -228,4 +210,7 @@ void UartSendBytes(USART_TypeDef* UART, uint8_t* bytes, uint32_t count, CR_STATE
 	
 	if(cr_state == CR_ON) send_cr(UART);
 }
+
+//
+
 

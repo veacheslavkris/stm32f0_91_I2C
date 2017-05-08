@@ -1,7 +1,10 @@
+#ifndef UART_H
+#define UART_H
+
 #include "stm32f091xc.h"
 #include "stdint.h"
 
-#define _UART_
+
 
 //#define UART_BT USART7
 //#define UART_PC USART8
@@ -161,14 +164,16 @@ typedef struct
 UartReceivedChar* UartGetReceivedChar(USART_TypeDef* UART);
 
 
-void Configure_USART7_BT(void);
+void UartConfigure(USART_TypeDef* UART, uint32_t apb1_clk, uint32_t brr);
 void Configure_USART8_PC(void);
 void Configure_USART_7_8_IT(void);
+
+
 void UartSendCharCR(USART_TypeDef* UART, uint8_t);
 void UartSendError(USART_TypeDef* UART, uint8_t);
 void UartSendString(USART_TypeDef* UART, char*, uint32_t, CR_STATE);
 void UartSendBytes(USART_TypeDef* UART, uint8_t*, uint32_t, CR_STATE);
 
 
-
+#endif
 

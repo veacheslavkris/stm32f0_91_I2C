@@ -27,7 +27,7 @@ __INLINE void gpio_init(GPIO_TypeDef* port, uint32_t pin, uint32_t mode, uint32_
 
 
 
-void GpioSetInterruptMode(uint32_t exti_port, uint32_t pin)
+void GpioSetInterruptMode(uint32_t exti_port, uint32_t pin, uint32_t edge_itr)
 {
 	uint32_t ix = pin >> 2;
 	uint32_t ix_pin = pin;
@@ -44,8 +44,9 @@ void GpioSetInterruptMode(uint32_t exti_port, uint32_t pin)
 	pin_mask = 1 << pin;
 		
 	EXTI->IMR |= pin_mask;
-	EXTI->RTSR |= pin_mask;
-	EXTI->FTSR |= pin_mask;
+	
+	if(edge_itr & EDGE_RISING_INTERRUPT) EXTI->RTSR |= pin_mask;
+	if(edge_itr & EDGE_FALLING_INTERRUPT) EXTI->FTSR |= pin_mask;
 }
 
 

@@ -7,7 +7,7 @@ extern void ClkMax7219Off(void);
 extern void ClkMax7219On(void);
 extern void SetDataPin(uint32_t);
 
-void InitMax7219(void)
+void Max7219_Init(void)
 {
     config_max7219(ADDR_DECODE_MODE, NO_DECODE_FOR_DIGITS);
     config_max7219(ADDR_INTENSITY, INTENSITY_MAX);
@@ -32,7 +32,7 @@ void config_max7219(uint8_t reg_addr, uint8_t reg_data)
     send_bits((reg_addr<<8)|reg_data);
 }
 
-void SetDigitSegmentMax7219(uint8_t reg_digit, uint8_t reg_data_seg)
+void Max7219_SetDigitSegment(uint8_t reg_digit, uint8_t reg_data_seg)
 {
     send_bits((reg_digit<<8)|reg_data_seg);
 }
@@ -82,16 +82,16 @@ void set_data_bit(uint32_t val)
 
 }
 
-void ClearAllDigitsMax7219(void)
+void Max7219_ClearAllDigits(void)
 {
-    SetDigitSegmentMax7219(ADDR_DIG_0, REG_DATA_CLEAR);
-    SetDigitSegmentMax7219(ADDR_DIG_1, REG_DATA_CLEAR);
-    SetDigitSegmentMax7219(ADDR_DIG_2, REG_DATA_CLEAR);
-    SetDigitSegmentMax7219(ADDR_DIG_3, REG_DATA_CLEAR);
-    SetDigitSegmentMax7219(ADDR_DIG_4, REG_DATA_CLEAR);
-    SetDigitSegmentMax7219(ADDR_DIG_5, REG_DATA_CLEAR);
-    SetDigitSegmentMax7219(ADDR_DIG_6, REG_DATA_CLEAR);
-    SetDigitSegmentMax7219(ADDR_DIG_7, REG_DATA_CLEAR);
+    Max7219_SetDigitSegment(ADDR_DIG_0, REG_DATA_CLEAR);
+    Max7219_SetDigitSegment(ADDR_DIG_1, REG_DATA_CLEAR);
+    Max7219_SetDigitSegment(ADDR_DIG_2, REG_DATA_CLEAR);
+    Max7219_SetDigitSegment(ADDR_DIG_3, REG_DATA_CLEAR);
+    Max7219_SetDigitSegment(ADDR_DIG_4, REG_DATA_CLEAR);
+    Max7219_SetDigitSegment(ADDR_DIG_5, REG_DATA_CLEAR);
+    Max7219_SetDigitSegment(ADDR_DIG_6, REG_DATA_CLEAR);
+    Max7219_SetDigitSegment(ADDR_DIG_7, REG_DATA_CLEAR);
 
 }
 

@@ -31,6 +31,9 @@
 
 #define ALT_FUNCTION_CLEAR	((uint32_t)0x00000000U)
 
+#define EDGE_RISING_INTERRUPT		((uint32_t)0x00000001U)
+#define EDGE_FALLING_INTERRUPT	((uint32_t)0x00000002U)
+#define EDGE_RISING_FALLING_ITR	(EDGE_RISING_INTERRUPT|EDGE_FALLING_INTERRUPT)
 
 
 
@@ -60,7 +63,7 @@ void gpio_init(GPIO_TypeDef* port, uint32_t pin, uint32_t mode, uint32_t otype, 
 
 void GpioSetModeOutputStrong(GPIO_TypeDef* port, uint32_t pin, uint32_t speed);
 void GpioSetModeI2C(GPIO_TypeDef* port, uint32_t pin, uint32_t alt_finc_nm);
-void GpioSetInterruptMode(uint32_t exti_port, uint32_t pin);
+void GpioSetInterruptMode(uint32_t exti_port, uint32_t pin, uint32_t edge_itr);
 
 
 

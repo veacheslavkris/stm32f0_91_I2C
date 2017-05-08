@@ -10,22 +10,22 @@
   */
 	
 	
-void I2C2GPIOConfigure(void)
-{
-  /* Enable the peripheral clock of GPIOB */
-  RCC->AHBENR |= RCC_AHBENR_GPIOBEN;
-	
-  /* (1) Open drain for I2C signals */
-  /* (2) AF1 for I2C signals */
-  /* (3) Select AF mode (10) on PB10 and PB11 */
-	
-	GpioSetModeI2C(GPIOB, 10, ALT_FUNC_1);
-	GpioSetModeI2C(GPIOB, 11, ALT_FUNC_1);
+//void I2C2GPIOConfigure(void)
+//{
+//  /* Enable the peripheral clock of GPIOB */
+//  RCC->AHBENR |= RCC_AHBENR_GPIOBEN;
+//	
+//  /* (1) Open drain for I2C signals */
+//  /* (2) AF1 for I2C signals */
+//  /* (3) Select AF mode (10) on PB10 and PB11 */
+//	
+//	GpioSetModeI2C(GPIOB, 10, ALT_FUNC_1);
+//	GpioSetModeI2C(GPIOB, 11, ALT_FUNC_1);
 
-	
-}
+//	
+//}
 
-void I2C2MasterConfigure(I2C_TypeDef* pI2C)
+void I2C2MasterInit(I2C_TypeDef* pI2C)
 {
   /* Enable the peripheral clock I2C2 */
   RCC->APB1ENR |= RCC_APB1ENR_I2C2EN;
