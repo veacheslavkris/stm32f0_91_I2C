@@ -31,6 +31,18 @@ void UartConfigBrrTeReUe(USART_TypeDef* UART, uint32_t apb1_clk, uint32_t brr)
 	//Configure_USART_7_8_IT
 }
 
+void UartConfig_TC_TXNE_Interrupts(USART_TypeDef* UART, IRQn_Type irq, uint32_t priority)
+{
+	UART->CR1 |= USART_CR1_TCIE;		/* enable TC interrupt */
+	UART->CR1 |= USART_CR1_RXNEIE;	/* enable RXNE interrupt */
+	
+	/* Configure IT */
+  /* (3) Set priority for USARTx_IRQn */
+  /* (4) Enable USARTx_IRQn */
+  NVIC_SetPriority(irq, priority); /* (3) */
+  NVIC_EnableIRQ(irq); /* (4) */
+}
+
 __INLINE void send_char(USART_TypeDef* UART, uint8_t ch)
 {
 	UART->TDR = ch;

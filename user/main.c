@@ -6,55 +6,12 @@
   * @date    19-June-2015
   * @brief   This code example shows how to configure a GPIO to use it
   *          as external interrupt
-  *
- ===============================================================================
-                    #####       MCU Resources     #####
- ===============================================================================
-   - PA0, PC9
-
- ===============================================================================
-                    ##### How to use this example #####
- ===============================================================================
-    - this file must be inserted in a project containing  the following files :
-      o system_stm32f0xx.c, startup_stm32f072xb.s
-      o stm32f0xx.h to get the register definitions
-      o CMSIS files
-    
-
- ===============================================================================
-                    ##### How to test this example #####
- ===============================================================================
-    - push the User button, this toggles the green led
-
-  *    
-  ******************************************************************************
-  * @attention
-  *
-  * <h2><center>&copy; COPYRIGHT 2015 STMicroelectronics</center></h2>
-  *
-  * Licensed under MCD-ST Liberty SW License Agreement V2, (the "License");
-  * You may not use this file except in compliance with the License.
-  * You may obtain a copy of the License at:
-  *
-  *        http://www.st.com/software_license_agreement_liberty_v2
-  *
-  * Unless required by applicable law or agreed to in writing, software 
-  * distributed under the License is distributed on an "AS IS" BASIS, 
-  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  * See the License for the specific language governing permissions and
-  * limitations under the License.
-  *
-  ******************************************************************************
   */
+ 
 
 /* Includes ------------------------------------------------------------------*/
 
-
 #include "main.h"
-
-/** @addtogroup STM32F0_Snippets
-  * @{
-  */
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/

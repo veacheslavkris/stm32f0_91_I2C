@@ -21,7 +21,8 @@ void HWInitGpio()
 	init_I2C_gpio();
 	init_max7219_gpio();
 	init_btn_interrupt();
-	init_uart8_gpio();
+	init_uart8();
+	
 }
 //
 
@@ -62,13 +63,13 @@ void init_btn_interrupt(void)
 }
 //
 
-void init_uart8_gpio(void)
-{
-	//  /* (1) Select AF mode (10) on PC2 and PC3 */
-	//  /* (2) AF2 for USART8 signals */
-	GpioSetModeUart(GPIOC, 2, 3, ALT_FUNC_2);
-//	GpioSetModeUart(GPIOC, 3, ALT_FUNC_2);
-}
+//void init_uart8_gpio(void)
+//{
+//	//  /* (1) Select AF mode (10) on PC2 and PC3 */
+//	//  /* (2) AF2 for USART8 signals */
+//	GpioSetModeUart(GPIOC, 2, 3, ALT_FUNC_2);
+////	GpioSetModeUart(GPIOC, 3, ALT_FUNC_2);
+//}
 //
 
 

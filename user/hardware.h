@@ -3,6 +3,7 @@
 
 #include "stm32f091xc.h"
 #include "gpio.h"
+#include "uart8.h"
 
 
 
@@ -12,9 +13,6 @@
 #define PIN_CLK_PC0_D_POS			((uint32_t)0)
 #define PIN_DOUT_PC1_D_POS		((uint32_t)1)
 #define PIN_LATCH_PB0_D_POS		((uint32_t)0)
-//#define PIN_LATCH_PC3_D_POS		((uint32_t)3)
-
-
 
 #define BTN_C13_PIN_POS 			13
 
@@ -30,7 +28,7 @@ void init_max7219_gpio(void);
 void init_btn_interrupt(void);
 
 
-void init_uart8_gpio(void);
+//void init_uart8_gpio(void);
 
 
 
