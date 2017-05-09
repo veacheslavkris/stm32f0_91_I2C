@@ -89,11 +89,13 @@ int main(void)
 	
 	HWInitGpio();
 	
-	I2C2MasterInit(I2C2);
+	/* Enable the peripheral clock I2C2 */
+  RCC->APB1ENR |= RCC_APB1ENR_I2C2EN;
+	I2C2ConfigMstrTimingPe(I2C2);
 	
 	/* Enable the peripheral clock USART8 */
   RCC->APB2ENR |= RCC_APB2ENR_USART8EN;
-	UartConfigure(USART8, 6000000, 9600);	
+	UartConfigBrrTeReUe(USART8, 6000000, 9600);
 	UartSendString(USART8, "Hello", 5, CR_ON);
 	
 	
@@ -112,7 +114,6 @@ int main(void)
   {
 		if(state_run == 1)
 		{
-
 			cur_temp = 0;
 			
 			cur_temp = I2C2MasterSendStartGetTempAutoEnd(I2C2, TMP275_ADDRESS);
@@ -168,12 +169,12 @@ void cycle_digits(void)
 
 void LatchMax7219Off(void)
 {
-	GPIOC->BRR = GPIO_BRR_BR_3;
+	GPIOB->BRR = GPIO_BRR_BR_0;
 }
 //
 void LatchMax7219On(void)
 {
-	GPIOC->BSRR = GPIO_BSRR_BS_3;
+	GPIOB->BSRR = GPIO_BSRR_BS_0;
 }
 //
 void ClkMax7219Off(void)

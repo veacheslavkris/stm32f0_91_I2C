@@ -19,7 +19,7 @@
 
 //void I2C2GPIOConfigure(void);
 
-void I2C2MasterInit(I2C_TypeDef* pI2C);
+void I2C2ConfigMstrTimingPe(I2C_TypeDef* pI2C);
 
 uint32_t I2C2MasterSendStartOneByteAutoEnd(I2C_TypeDef* pI2C, uint32_t slaveAddress, uint32_t data_byte);
 	

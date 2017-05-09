@@ -5,7 +5,7 @@ void init_rcc(void)
 	// led gpio
 	RCC->AHBENR |= RCC_AHBENR_GPIOAEN; /* (1) */ 
 
-	// I2C
+	// I2C, MAXIM7219
 	RCC->AHBENR |= RCC_AHBENR_GPIOBEN;
 	
 	// MAXIM7219, BTN_C13, UART
@@ -46,7 +46,7 @@ void init_max7219_gpio(void)
 {
 	GpioSetModeOutputStrong(GPIOC, PIN_CLK_PC0_D_POS, OSPEEDR_MEDIUM);
 	GpioSetModeOutputStrong(GPIOC, PIN_DOUT_PC1_D_POS, OSPEEDR_MEDIUM);
-	GpioSetModeOutputStrong(GPIOC, PIN_LATCH_PC3_D_POS, OSPEEDR_MEDIUM);
+	GpioSetModeOutputStrong(GPIOB, PIN_LATCH_PB0_D_POS, OSPEEDR_MEDIUM);
 }
 //
 
@@ -66,10 +66,8 @@ void init_uart8_gpio(void)
 {
 	//  /* (1) Select AF mode (10) on PC2 and PC3 */
 	//  /* (2) AF2 for USART8 signals */
-	GpioSetModeUart(GPIOC, 2, ALT_FUNC_2);
-	GpioSetModeUart(GPIOC, 3, ALT_FUNC_2);
-
-
+	GpioSetModeUart(GPIOC, 2, 3, ALT_FUNC_2);
+//	GpioSetModeUart(GPIOC, 3, ALT_FUNC_2);
 }
 //
 

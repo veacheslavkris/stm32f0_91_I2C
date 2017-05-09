@@ -1,5 +1,4 @@
  /* Includes ------------------------------------------------------------------*/
-//#include "stm32f0xx.h"
 #include "uart.h"
 
 UartReceivedChar structReceivedChar;
@@ -8,41 +7,21 @@ void send_char(USART_TypeDef* UART, uint8_t ch);
 void send_char_cr(USART_TypeDef* UART, uint8_t);
 void send_cr(USART_TypeDef* UART);
 
-//void InitUart_7_8(void)
-//{
-//	/* Enable the peripheral clock of GPIOC */
-//  RCC->AHBENR |= RCC_AHBENR_GPIOCEN;
-//	
-//	Configure_GPIO_USART7_BT();
-//	Configure_USART7_BT();
-//	Configure_GPIO_USART8_PC();
-//	Configure_USART8_PC();
-//	Configure_USART_7_8_IT();
+// 
 
-//}
-
-
-void UartConfigure(USART_TypeDef* UART, uint32_t apb1_clk, uint32_t brr)
+void UartConfigBrrTeReUe(USART_TypeDef* UART, uint32_t apb1_clk, uint32_t brr)
 {
-  /* Enable the peripheral clock USART7 */
-//  RCC->APB2ENR |= RCC_APB2ENR_USART7EN;
-
   /* Configure UART */
-  /* (1) oversampling by 16, 38400 baud */
+  /* (1) oversampling by 16, 9600 baud */
   /* (2) 8 data bit, 1 start bit, 1 stop bit, no parity, transmit/receive */
-// 	UART->BRR = 6000000 / 38400; /* (1) */
 
-//	UART->BRR = 6000000 / 9600; /* (1) */
  	UART->BRR = apb1_clk / brr; /* (1) */
-
 	
 	UART->CR1 = USART_CR1_TE |USART_CR1_RE | USART_CR1_UE; /* (2) */
 	
   /* polling idle frame Transmission */
 	while((UART->ISR & USART_ISR_TC) != USART_ISR_TC) continue;
-//  { 
-//    /* add time out here for a robust application */
-//  }
+
   	
 	UART->ICR |= USART_ICR_TCCF;		/* clear TC flag */
  

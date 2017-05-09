@@ -25,20 +25,15 @@
 //	
 //}
 
-void I2C2MasterInit(I2C_TypeDef* pI2C)
+void I2C2ConfigMstrTimingPe(I2C_TypeDef* pI2C)
 {
-  /* Enable the peripheral clock I2C2 */
-  RCC->APB1ENR |= RCC_APB1ENR_I2C2EN;
-
   /* Configure I2C2, master */
   /* (1) Timing register value is computed with the AN4235 xls file,
    fast Mode @400kHz with I2CCLK = 48MHz, rise time = 140ns, fall time = 40ns */
   /* (2) Periph enable */
-  /* (3) Slave address = 0x48, write transfer, 0 byte to transmit, autoend */
   pI2C->TIMINGR = (uint32_t)0x00B01A4B; /* (1) */
   pI2C->CR1 = I2C_CR1_PE; /* (2) */
-//	I2C2->CR2 =  I2C_CR2_AUTOEND | (TMP275_ADDRESS<<1); /* (3) */
-//	I2C2->CR2 =  I2C_CR2_AUTOEND; /* (3) */
+
 
 }
 

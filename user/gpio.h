@@ -68,7 +68,7 @@ void gpio_init(GPIO_TypeDef* port, uint32_t pin, uint32_t mode, uint32_t otype, 
 
 void GpioSetModeOutputStrong(GPIO_TypeDef* port, uint32_t pin, uint32_t speed);
 void GpioSetModeI2C(GPIO_TypeDef* port, uint32_t pin, uint32_t alt_finc_nm);
-void GpioSetModeUart(GPIO_TypeDef* port, uint32_t pin, uint32_t alt_finc_nm);
+void GpioSetModeUart(GPIO_TypeDef* port, uint32_t pinTx, uint32_t pinRx, uint32_t alt_finc_nm);
 
 void GpioSetInterruptMode(uint32_t exti_port, uint32_t pin, uint32_t edge_itr);
 

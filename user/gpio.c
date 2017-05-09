@@ -83,9 +83,11 @@ void GpioSetModeI2C(GPIO_TypeDef* port, uint32_t pin, uint32_t alt_finc_nm)
 }
 
 
-void GpioSetModeUart(GPIO_TypeDef* port, uint32_t pin, uint32_t alt_finc_nm)
+void GpioSetModeUart(GPIO_TypeDef* port, uint32_t pinTx, uint32_t pinRx, uint32_t alt_finc_nm)
 {
-	gpio_init(port, pin, MODER_ALT_FUNC, OTYPER_PUSH_PULL, OSPEEDR_HIGH, PUPDR_PULLUP, alt_finc_nm);
+	gpio_init(port, pinTx, MODER_ALT_FUNC, OTYPER_PUSH_PULL, OSPEEDR_HIGH, PUPDR_PULLUP, alt_finc_nm);
+	gpio_init(port, pinRx, MODER_ALT_FUNC, OTYPER_PUSH_PULL, OSPEEDR_HIGH, PUPDR_PULLUP, alt_finc_nm);
+
 }
 
 
