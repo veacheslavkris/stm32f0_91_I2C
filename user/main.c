@@ -94,7 +94,7 @@ int main(void)
 	/* Enable the peripheral clock USART8 */
   RCC->APB2ENR |= RCC_APB2ENR_USART8EN;
 	UartConfigure(USART8, 6000000, 9600);	
-	
+	UartSendString(USART8, "Hello", 5, CR_ON);
 	
 	
 	/* MAX 7219 */ 
@@ -105,8 +105,8 @@ int main(void)
 	Max7219_SetDigitSegment(ADDR_DIG_0, DIGIT_0);
 	Max7219_SetDigitSegment(ADDR_DIG_4, DIGIT_0);
 	
-	
 	UartSendCharCR(USART8, 'A');
+
   
 	while (1) /* Infinite loop */
   {

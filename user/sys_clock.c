@@ -69,10 +69,10 @@ if (HSEStatus == (uint32_t)0x01)
     FLASH->ACR = FLASH_ACR_PRFTBE | FLASH_ACR_LATENCY;
 
      /* HCLK = SYSCLK / 1 */
-     RCC->CFGR |= (uint32_t)RCC_CFGR_HPRE_DIV1;
+     RCC->CFGR |= (uint32_t)RCC_CFGR_HPRE_DIV1; // POSITION 6
        
      /* PCLK = HCLK / 8 */
-     RCC->CFGR |= (uint32_t)RCC_CFGR_PPRE_DIV8;
+     RCC->CFGR |= (uint32_t)RCC_CFGR_PPRE_DIV8; // POSITION 7
 
     /* PLL configuration */
     RCC->CFGR &= (uint32_t)((uint32_t)~(RCC_CFGR_PLLSRC | RCC_CFGR_PLLXTPRE | RCC_CFGR_PLLMUL));
@@ -142,13 +142,13 @@ if (HSEStatus == (uint32_t)0x01)
 
 	 */
 
-	RCC->CFGR |= (uint32_t)(RCC_CFGR_PLLSRC_HSE_PREDIV | RCC_CFGR_PLLMUL4);
+	RCC->CFGR |= (uint32_t)(RCC_CFGR_PLLSRC_HSE_PREDIV | RCC_CFGR_PLLMUL12);  // POSITION 2 _ 4
     
 	RCC->CFGR2 &= (uint32_t)((uint32_t)~(RCC_CFGR2_PREDIV_2));
-  RCC->CFGR2 |= (uint32_t)(RCC_CFGR2_PREDIV_DIV2);
+  RCC->CFGR2 |= (uint32_t)(RCC_CFGR2_PREDIV_DIV2); // POSITION 3
 
 	/* Enable PLL */
-	RCC->CR |= RCC_CR_PLLON;
+	RCC->CR |= RCC_CR_PLLON; // POSITION 1
 
 	/* Wait till PLL is ready */
 	while((RCC->CR & RCC_CR_PLLRDY) == 0)
@@ -185,7 +185,7 @@ if (HSEStatus == (uint32_t)0x01)
 
     /* Select PLL as system clock source */
     RCC->CFGR &= (uint32_t)((uint32_t)~(RCC_CFGR_SW));
-    RCC->CFGR |= (uint32_t)RCC_CFGR_SW_PLL;    
+    RCC->CFGR |= (uint32_t)RCC_CFGR_SW_PLL;   // POSITION 5  
 
     /* Wait till PLL is used as system clock source */
     while ((RCC->CFGR & (uint32_t)RCC_CFGR_SWS) != (uint32_t)RCC_CFGR_SWS_PLL)

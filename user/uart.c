@@ -32,8 +32,8 @@ void UartConfigure(USART_TypeDef* UART, uint32_t apb1_clk, uint32_t brr)
   /* (2) 8 data bit, 1 start bit, 1 stop bit, no parity, transmit/receive */
 // 	UART->BRR = 6000000 / 38400; /* (1) */
 
-	UART->BRR = 6000000 / 9600; /* (1) */
-// 	UART->BRR = apb1_clk / brr; /* (1) */
+//	UART->BRR = 6000000 / 9600; /* (1) */
+ 	UART->BRR = apb1_clk / brr; /* (1) */
 
 	
 	UART->CR1 = USART_CR1_TE |USART_CR1_RE | USART_CR1_UE; /* (2) */
