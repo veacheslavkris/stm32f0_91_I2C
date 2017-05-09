@@ -21,9 +21,6 @@
 	float cur_temp = 0;
 	uint32_t systick_count =0;
 	
-	uint32_t ary_digits[10]= {DIGIT_0,DIGIT_1,DIGIT_2,DIGIT_3,DIGIT_4,DIGIT_5,DIGIT_6,DIGIT_7,DIGIT_8,DIGIT_9};
-
-
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 
@@ -50,20 +47,26 @@ int main(void)
   RCC->APB1ENR |= RCC_APB1ENR_I2C2EN;
 	I2C2ConfigMstrTimingPe(I2C2);
 	
-	/* Enable the peripheral clock USART8 */
-  RCC->APB2ENR |= RCC_APB2ENR_USART8EN;
-	UartConfigBrrTeReUe(USART8, 6000000, 9600);
 	UartSendString(USART8, "Hello", 5, CR_ON);
 	
 	
 	/* MAX 7219 */ 
 	start_max7219();
 	
-	delay_systick(3000);
+	delay_systick(1000);
 	
-	Max7219_SetDigitSegment(ADDR_DIG_0, DIGIT_0);
-	Max7219_SetDigitSegment(ADDR_DIG_4, DIGIT_0);
-	
+	Max7219_ShowAtPositionNumber(11, 0);
+
+	delay_systick(2000);
+	Max7219_ShowAtPositionNumber(0, 15);
+	delay_systick(2000);
+
+	Max7219_ClearAllDigits();
+
+	Max7219_ShowAtPositionNumber(0,0);
+	Max7219_ShowAtPositionNumber(4,0);
+
+
 	UartSendCharCR(USART8, 'A');
 
   
@@ -115,11 +118,9 @@ void cycle_digits(void)
 	}
 
 	
-		
-	Max7219_SetDigitSegment(ADDR_DIG_0, ary_digits[cnt]);
-	Max7219_SetDigitSegment(ADDR_DIG_4, ary_digits[ix_digit_4]);
-	
-	
+	Max7219_ShowAtPositionNumber(0, cnt);
+	Max7219_ShowAtPositionNumber(4, ix_digit_4);
+
 	cnt++;
 
 }

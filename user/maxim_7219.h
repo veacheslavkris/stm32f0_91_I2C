@@ -98,10 +98,7 @@
 #define DIGIT_9         (REG_DATA_SEG_A|REG_DATA_SEG_B|REG_DATA_SEG_C|REG_DATA_SEG_D|REG_DATA_SEG_F|REG_DATA_SEG_G)
 #define DIGIT_POINT     REG_DATA_SEG_DP
     
-
     
-
-
 #define SIGN_A          (REG_DATA_SEG_A|REG_DATA_SEG_B|REG_DATA_SEG_C|REG_DATA_SEG_E|REG_DATA_SEG_F|REG_DATA_SEG_G)
 #define SIGN_E          (REG_DATA_SEG_A|REG_DATA_SEG_D|REG_DATA_SEG_E|REG_DATA_SEG_F|REG_DATA_SEG_G)
 #define SIGN_C          (REG_DATA_SEG_A|REG_DATA_SEG_D|REG_DATA_SEG_E|REG_DATA_SEG_F)
@@ -129,12 +126,11 @@ void config_max7219(uint8_t reg_addr, uint8_t reg_data);
 
 void send_bits(uint32_t val);
 
-
-void Max7219_SetDigitSegment(uint8_t reg_digit, uint8_t reg_data_seg);
 void Max7219_Init(void);
 void Max7219_ClearAllDigits(void);
-
-
+void Max7219_ShowAtPositionNumber(uint32_t position, uint32_t number);
+void show_err_on_display_0(void);
+void show_err_on_display_1(void);
 
 
 
