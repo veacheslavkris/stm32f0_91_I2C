@@ -1,9 +1,9 @@
 #include "uart8.h"
-
+#define pTx 2
+#define pRx 3
 
 void init_uart8(void)
 {
-	
 	RCC->AHBENR |= RCC_AHBENR_GPIOCEN;
 	
 	//  /* (1) Select AF mode (10) on PC2 and PC3 */
