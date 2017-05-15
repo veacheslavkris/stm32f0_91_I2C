@@ -27,11 +27,13 @@ __INLINE void gpio_init(GPIO_TypeDef* port, uint32_t pin, uint32_t mode, uint32_
 
 
 
-void GpioSetInterruptMode(uint32_t exti_port, uint32_t pin, uint32_t edge_itr)
+void GpioSetInputModeInterrupt(GPIO_TypeDef* port, uint32_t exti_port, uint32_t pin, uint32_t edge_itr)
 {
 	uint32_t ix = pin >> 2;
 	uint32_t ix_pin = pin;
 	uint32_t pin_mask;
+	
+	gpio_init(port, pin, MODER_INPUT, OTYPER_PUSH_PULL, OSPEEDR_LOW, PUPDR_CLEAR, ALT_FUNCTION_CLEAR);
 	
 	while(ix_pin > 3)
 	{

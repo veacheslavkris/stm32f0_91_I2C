@@ -1,9 +1,10 @@
 #ifndef MAXIM_7219_H
-    #define MAXIM_7219_H
+#define MAXIM_7219_H
 
-    #include "stdint.h"
-    
-    
+#include "gpio.h"
+
+
+
 #define ADDR_NO_OP          (0x00)
 #define ADDR_DIG_0          (0x01)
 #define ADDR_DIG_1          (0x02)
@@ -73,10 +74,7 @@
 /*----- ADDR_DISPLAY_TEST -----*/   
 #define DT_NORMAL_OPERATION     REG_DATA_CLEAR
 #define DT_MODE                 REG_DATA_D_0
-        
-    
-    
-    
+         
 #define REG_DATA_SEG_G      REG_DATA_D_0    
 #define REG_DATA_SEG_F      REG_DATA_D_1
 #define REG_DATA_SEG_E      REG_DATA_D_2    
@@ -97,7 +95,6 @@
 #define DIGIT_8         (REG_DATA_SEG_A|REG_DATA_SEG_B|REG_DATA_SEG_C|REG_DATA_SEG_D|REG_DATA_SEG_E|REG_DATA_SEG_F|REG_DATA_SEG_G)
 #define DIGIT_9         (REG_DATA_SEG_A|REG_DATA_SEG_B|REG_DATA_SEG_C|REG_DATA_SEG_D|REG_DATA_SEG_F|REG_DATA_SEG_G)
 #define DIGIT_POINT     REG_DATA_SEG_DP
-    
     
 #define SIGN_A          (REG_DATA_SEG_A|REG_DATA_SEG_B|REG_DATA_SEG_C|REG_DATA_SEG_E|REG_DATA_SEG_F|REG_DATA_SEG_G)
 #define SIGN_E          (REG_DATA_SEG_A|REG_DATA_SEG_D|REG_DATA_SEG_E|REG_DATA_SEG_F|REG_DATA_SEG_G)
@@ -120,15 +117,15 @@
 #define SIGN_UPR_N      (REG_DATA_SEG_A|REG_DATA_SEG_B|REG_DATA_SEG_F)
 #define SIGN_TIRE       (REG_DATA_SEG_G)    
     
-void latch_max7219(void);
-void set_data_bit(uint32_t val);
-void config_max7219(uint8_t reg_addr, uint8_t reg_data);
-
-void send_bits(uint32_t val);
+__INLINE void latch_max7219(void);
+__INLINE void set_data_bit(uint32_t val);
+__INLINE void config_max7219(uint8_t reg_addr, uint8_t reg_data);
+__INLINE void send_bits(uint32_t val);
 
 void Max7219_Init(void);
 void Max7219_ClearAllDigits(void);
 void Max7219_ShowAtPositionNumber(uint32_t position, uint32_t number);
+
 void show_err_on_display_0(void);
 void show_err_on_display_1(void);
 

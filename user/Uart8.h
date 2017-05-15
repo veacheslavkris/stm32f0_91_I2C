@@ -1,9 +1,23 @@
 #ifndef UART8_H
 #define UART8_H
-#include "gpio.h"
-#include "uart.h"
 
-void init_uart8(void);
+#include "gpio.h"
+#include "a_uart.h"
+
+
+
+
+
+
+
+
+
+
+
+
+void Uart8_Init(void);
+
+
 
 
 
@@ -25,7 +39,6 @@ void init_uart8(void);
 
 
 #endif
-
 
 
 

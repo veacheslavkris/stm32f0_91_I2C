@@ -410,11 +410,6 @@
               <FilePath>.\user\rtc.c</FilePath>
             </File>
             <File>
-              <FileName>uart.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\user\uart.c</FilePath>
-            </File>
-            <File>
               <FileName>hardware.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\user\hardware.c</FilePath>
@@ -423,6 +418,21 @@
               <FileName>Uart8.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\user\Uart8.c</FilePath>
+            </File>
+            <File>
+              <FileName>pc13btn.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\user\pc13btn.c</FilePath>
+            </File>
+            <File>
+              <FileName>a_uart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\user\a_uart.c</FilePath>
+            </File>
+            <File>
+              <FileName>pa5_led.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\user\pa5_led.c</FilePath>
             </File>
           </Files>
         </Group>
