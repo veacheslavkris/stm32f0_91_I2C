@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    01_HWInterruptSelection/main.c 
+  * @file    st32f0_91_I2C/main.c 
   * @author  MCD Application Team
   * @version V1.2.0
   * @date    19-June-2015
@@ -19,7 +19,7 @@
 /* Private variables ---------------------------------------------------------*/
 	uint32_t state_run = 0;
 	float cur_temp = 0;
-	uint32_t systick_count =0;
+	volatile uint32_t systick_count =0;
 	
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
@@ -47,11 +47,13 @@ int main(void)
   RCC->APB1ENR |= RCC_APB1ENR_I2C2EN;
 	I2C2ConfigMstrTimingPe(I2C2);
 	
-	UartSendString(USART8, "Hello", 5, CR_ON);
+//	UartSendString(USART8, "Hello", 5, CR_ON);
 	
 	
 	/* MAX 7219 */ 
-	start_max7219();
+	Max7219_Init();
+
+	Max7219_ClearAllDigits();
 	
 	delay_systick(1000);
 	
@@ -67,9 +69,16 @@ int main(void)
 	Max7219_ShowAtPositionNumber(4,0);
 
 
-	UartSendCharCR(USART8, 'A');
+//	UartSendCharCR(USART8, 'A');
 
-  
+  BtnPc13_Init();
+	
+	LedPA5_Init();
+	
+	LED_ON;
+	delay_systick(2000);
+	LED_OFF;	
+	
 	while (1) /* Infinite loop */
   {
 		if(state_run == 1)
@@ -95,13 +104,6 @@ void delay_systick(uint32_t ms)
 
 }
 
-void start_max7219()
-{
-	Max7219_Init();
-
-	Max7219_ClearAllDigits();
-}
-
 void cycle_digits(void)
 {
 	static uint32_t cnt = 0;
@@ -125,31 +127,11 @@ void cycle_digits(void)
 
 }
 
-void LatchMax7219Off(void)
-{
-	GPIOB->BRR = GPIO_BRR_BR_0;
-}
-//
-void LatchMax7219On(void)
-{
-	GPIOB->BSRR = GPIO_BSRR_BS_0;
-}
-//
-void ClkMax7219Off(void)
-{
-	GPIOC->BRR = GPIO_BRR_BR_0;
-}
-//
-void ClkMax7219On(void)
-{
-	GPIOC->BSRR = GPIO_BSRR_BS_0;
-}
-//
-void SetDataPin(uint32_t val)
-{
-	if(val) GPIOC->BSRR = GPIO_BSRR_BS_1;
-	else GPIOC->BRR = GPIO_BRR_BR_1;
-}
+
+
+
+
+
 
 /******************************************************************************/
 /*            Cortex-M0 Processor Exceptions Handlers                         */
@@ -193,9 +175,8 @@ void EXTI4_15_IRQHandler(void)
   if ((EXTI->PR & EXTI_PR_PR13) == EXTI_PR_PR13)  /* Check line 13 (0) has triggered the IT */
   {
     EXTI->PR |= EXTI_PR_PR13; /* Clear the pending bit */
-//    GPIOA->ODR ^= (1<<5); /* Toggle green led on PA5 */
-//		GPIOA->ODR ^= GPIO_ODR_5;
-		GPIOA->ODR ^= LED_GREEN_A5_B_POS;
+	
+		LED_TOGGLE;
 		
 		state_run = 1;
   }

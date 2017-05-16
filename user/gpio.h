@@ -8,6 +8,7 @@
 
 
 #define MODER_MASK				MASK_2_BITS
+#define MODER_INPUT			((uint32_t)0x00000000U)
 #define MODER_OUTPUT		((uint32_t)0x00000001U)
 #define MODER_ALT_FUNC	((uint32_t)0x00000002U)
 
@@ -70,7 +71,9 @@ void GpioSetModeOutputStrong(GPIO_TypeDef* port, uint32_t pin, uint32_t speed);
 void GpioSetModeI2C(GPIO_TypeDef* port, uint32_t pin, uint32_t alt_finc_nm);
 void GpioSetModeUart(GPIO_TypeDef* port, uint32_t pinTx, uint32_t pinRx, uint32_t alt_finc_nm);
 
-void GpioSetInterruptMode(uint32_t exti_port, uint32_t pin, uint32_t edge_itr);
+
+
+void GpioSetInputModeInterrupt(GPIO_TypeDef* port, uint32_t exti_port, uint32_t pin, uint32_t edge_itr);
 
 
 

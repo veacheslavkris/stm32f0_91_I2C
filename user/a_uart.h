@@ -1,5 +1,5 @@
-#ifndef UART_H
-#define UART_H
+#ifndef A_UART_H
+#define A_UART_H
 
 #include "stm32f091xc.h"
 #include "stdint.h"
@@ -37,6 +37,8 @@ UartReceivedChar* UartGetReceivedChar(USART_TypeDef* UART);
 
 
 void UartConfigBrrTeReUe(USART_TypeDef* UART, uint32_t apb1_clk, uint32_t brr);
+void UartConfig_TC_TXNE_Enable(USART_TypeDef* UART);
+void UartConfig_InitInterrupts(IRQn_Type irq, uint32_t priority);
 
 
 void UartSendCharCR(USART_TypeDef* UART, uint8_t);

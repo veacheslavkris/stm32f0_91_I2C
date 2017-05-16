@@ -1,18 +1,27 @@
 #include "uart8.h"
-#define pTx 2
-#define pRx 3
 
-void init_uart8(void)
+#define GPIO_UART				GPIOC
+#define PIN_TX_D_POS		2
+#define PIN_RX_D_POS		3
+#define ALT_FUNC				ALT_FUNC_2
+
+#define UART						USART8
+
+
+void Uart8_Init(void)
 {
-	RCC->AHBENR |= RCC_AHBENR_GPIOCEN;
+	/* Enable the peripheral clock of GPIOC */
+  RCC->AHBENR |= RCC_AHBENR_GPIOCEN;
 	
-	//  /* (1) Select AF mode (10) on PC2 and PC3 */
-	//  /* (2) AF2 for USART8 signals */
-	GpioSetModeUart(GPIOC, 2, 3, ALT_FUNC_2);
-	
+	GpioSetModeUart(GPIO_UART, PIN_TX_D_POS, PIN_RX_D_POS, ALT_FUNC);
+
 	/* Enable the peripheral clock USART8 */
   RCC->APB2ENR |= RCC_APB2ENR_USART8EN;
-	UartConfigBrrTeReUe(USART8, 6000000, 9600);
+	UartConfigBrrTeReUe(UART, 6000000, 9600);
+	
+	UartConfig_TC_TXNE_Enable(UART);
+//	UartConfig_InitInterrupts(USART3_8_IRQn, 0);
+
 }
 
 
