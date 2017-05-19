@@ -390,11 +390,6 @@
               <FilePath>.\user\sys_clock.c</FilePath>
             </File>
             <File>
-              <FileName>I2C.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\user\I2C.c</FilePath>
-            </File>
-            <File>
               <FileName>gpio.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\user\gpio.c</FilePath>
@@ -408,11 +403,6 @@
               <FileName>rtc.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\user\rtc.c</FilePath>
-            </File>
-            <File>
-              <FileName>hardware.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\user\hardware.c</FilePath>
             </File>
             <File>
               <FileName>Uart8.c</FileName>
@@ -433,6 +423,16 @@
               <FileName>pa5_led.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\user\pa5_led.c</FilePath>
+            </File>
+            <File>
+              <FileName>a_i2c.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\user\a_i2c.c</FilePath>
+            </File>
+            <File>
+              <FileName>i2c2.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\user\i2c2.c</FilePath>
             </File>
           </Files>
         </Group>

@@ -19,7 +19,7 @@ void Uart8_Init(void)
   RCC->APB2ENR |= RCC_APB2ENR_USART8EN;
 	UartConfigBrrTeReUe(UART, 6000000, 9600);
 	
-	UartConfig_TC_TXNE_Enable(UART);
+//	UartConfig_TC_TXNE_IE_Enable(UART);
 //	UartConfig_InitInterrupts(USART3_8_IRQn, 0);
 
 }

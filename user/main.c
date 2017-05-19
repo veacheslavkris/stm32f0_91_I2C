@@ -41,14 +41,7 @@ int main(void)
 
 	RtcInitLse();
 	
-	HWInitGpio();
-	
-	/* Enable the peripheral clock I2C2 */
-  RCC->APB1ENR |= RCC_APB1ENR_I2C2EN;
-	I2C2ConfigMstrTimingPe(I2C2);
-	
-//	UartSendString(USART8, "Hello", 5, CR_ON);
-	
+	I2C2_Init();
 	
 	/* MAX 7219 */ 
 	Max7219_Init();
@@ -68,9 +61,6 @@ int main(void)
 	Max7219_ShowAtPositionNumber(0,0);
 	Max7219_ShowAtPositionNumber(4,0);
 
-
-//	UartSendCharCR(USART8, 'A');
-
   BtnPc13_Init();
 	
 	LedPA5_Init();
@@ -85,7 +75,7 @@ int main(void)
 		{
 			cur_temp = 0;
 			
-			cur_temp = I2C2MasterSendStartGetTempAutoEnd(I2C2, TMP275_ADDRESS);
+			cur_temp = I2C_MasterStartGetTempAutoEnd(I2C2, TMP275_ADDRESS);
 			
 			state_run = 0;
 		}

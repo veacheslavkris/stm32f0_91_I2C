@@ -26,7 +26,7 @@ void UartConfigBrrTeReUe(USART_TypeDef* UART, uint32_t apb1_clk, uint32_t brr)
 	UART->ICR |= USART_ICR_TCCF;		/* clear TC flag */
 }
 
-void UartConfig_TC_TXNE_Enable(USART_TypeDef* UART)
+void UartConfig_TC_TXNE_IE_Enable(USART_TypeDef* UART)
 {
 	UART->CR1 |= USART_CR1_TCIE;		/* enable TC interrupt */
 	UART->CR1 |= USART_CR1_RXNEIE;	/* enable RXNE interrupt */

@@ -1,4 +1,4 @@
-#include "I2C.h"
+#include "a_i2c.h"
 
 
 	/**
@@ -10,22 +10,7 @@
   */
 	
 	
-//void I2C2GPIOConfigure(void)
-//{
-//  /* Enable the peripheral clock of GPIOB */
-//  RCC->AHBENR |= RCC_AHBENR_GPIOBEN;
-//	
-//  /* (1) Open drain for I2C signals */
-//  /* (2) AF1 for I2C signals */
-//  /* (3) Select AF mode (10) on PB10 and PB11 */
-//	
-//	GpioSetModeI2C(GPIOB, 10, ALT_FUNC_1);
-//	GpioSetModeI2C(GPIOB, 11, ALT_FUNC_1);
-
-//	
-//}
-
-void I2C2ConfigMstrTimingPe(I2C_TypeDef* pI2C)
+void I2C_ConfigMstrTimingPe(I2C_TypeDef* pI2C)
 {
   /* Configure I2C2, master */
   /* (1) Timing register value is computed with the AN4235 xls file,
@@ -37,7 +22,7 @@ void I2C2ConfigMstrTimingPe(I2C_TypeDef* pI2C)
 
 }
 
-uint32_t I2C2MasterSendStartOneByteAutoEnd(I2C_TypeDef* pI2C, uint32_t slaveAddress, uint32_t data_byte)
+uint32_t I2C_MasterStartSendOneByteAutoEnd(I2C_TypeDef* pI2C, uint32_t slaveAddress, uint32_t data_byte)
 {
 	// set: autoend, slave address
 	pI2C->CR2 |=  I2C_CR2_AUTOEND|(((uint8_t)slaveAddress)<<1);
@@ -70,7 +55,7 @@ uint32_t I2C2MasterSendStartOneByteAutoEnd(I2C_TypeDef* pI2C, uint32_t slaveAddr
 
 }
 
-float I2C2MasterSendStartGetTempAutoEnd(I2C_TypeDef* pI2C, uint32_t slaveAddress)
+float I2C_MasterStartGetTempAutoEnd(I2C_TypeDef* pI2C, uint32_t slaveAddress)
 {
 	uint8_t temp_1 = 0x00;
 	uint8_t temp_2 = 0x00;

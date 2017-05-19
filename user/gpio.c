@@ -79,9 +79,11 @@ void GpioSetModeOutputStrong(GPIO_TypeDef* port, uint32_t pin, uint32_t speed)
 }
 
 
-void GpioSetModeI2C(GPIO_TypeDef* port, uint32_t pin, uint32_t alt_finc_nm)
+void GpioSetModeI2C(GPIO_TypeDef* port, uint32_t pinScl, uint32_t pinSda, uint32_t alt_finc_nm)
 {
-	gpio_init(port, pin, MODER_ALT_FUNC, OTYPER_OPEN_DRAIN, OSPEEDR_CLEAR, PUPDR_CLEAR, alt_finc_nm);
+	gpio_init(port, pinScl, MODER_ALT_FUNC, OTYPER_OPEN_DRAIN, OSPEEDR_CLEAR, PUPDR_CLEAR, alt_finc_nm);
+	gpio_init(port, pinSda, MODER_ALT_FUNC, OTYPER_OPEN_DRAIN, OSPEEDR_CLEAR, PUPDR_CLEAR, alt_finc_nm);
+
 }
 
 
