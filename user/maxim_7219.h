@@ -116,7 +116,13 @@
 #define SIGN_UND_N      (REG_DATA_SEG_C|REG_DATA_SEG_E|REG_DATA_SEG_G)        
 #define SIGN_UPR_N      (REG_DATA_SEG_A|REG_DATA_SEG_B|REG_DATA_SEG_F)
 #define SIGN_TIRE       (REG_DATA_SEG_G)    
-    
+
+typedef enum
+{
+	LEFT_SPACE,
+	LEFT_ZERO
+}EnumLeftSign;
+
 __INLINE void latch_max7219(void);
 __INLINE void set_data_bit(uint32_t val);
 __INLINE void config_max7219(uint8_t reg_addr, uint8_t reg_data);
@@ -128,6 +134,8 @@ void Max7219_ShowAtPositionNumber(uint32_t position, uint32_t number);
 
 void show_err_on_display_0(void);
 void show_err_on_display_1(void);
+
+void Max7219_DisplayBcdArray(EnumLeftSign, uint8_t* p_ary_bcd);
 
 
 

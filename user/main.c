@@ -20,7 +20,8 @@
 	uint32_t state_run = 0;
 	float cur_temp = 0;
 	volatile uint32_t systick_count =0;
-	
+
+	StructFloatToBcd structFloatToBcd;
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 
@@ -67,7 +68,9 @@ int main(void)
 	
 	LED_ON;
 	delay_systick(2000);
-	LED_OFF;	
+	LED_OFF;
+
+	structFloatToBcd.float_count=2;
 	
 	while (1) /* Infinite loop */
   {
@@ -76,12 +79,18 @@ int main(void)
 			cur_temp = 0;
 			
 			cur_temp = I2C_MasterStartGetTempAutoEnd(I2C2, TMP275_ADDRESS);
+			structFloatToBcd.flt = cur_temp;
+			
+			ConvertFloatToBcd(&structFloatToBcd);
+			
+			Max7219_DisplayBcdArray(LEFT_ZERO, structFloatToBcd.ary_bcd);
+			
 			
 			state_run = 0;
 		}
 		
-		cycle_digits();
-		delay_systick(1000);
+//		cycle_digits();
+//		delay_systick(1000);
   }
 
 }

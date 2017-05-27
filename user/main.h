@@ -6,7 +6,7 @@
 #include "uart8.h"
 #include "pc13btn.h"
 #include "pa5_led.h"
-
+#include "DecBcdCharConverter.h"
 
 
 /* Private define ------------------------------------------------------------*/
