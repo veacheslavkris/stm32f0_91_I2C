@@ -83,8 +83,8 @@ int main(void)
 			
 			ConvertFloatToBcd(&structFloatToBcd);
 			
-			Max7219_DisplayBcdArray(LEFT_ZERO, structFloatToBcd.ary_bcd);
-			
+//			Max7219_DisplayBcdArray(LEFT_ZERO, structFloatToBcd.ary_bcd);
+			DisplayMax7219_TT_tt(0, &structFloatToBcd);
 			
 			state_run = 0;
 		}

@@ -84,6 +84,10 @@
 #define REG_DATA_SEG_A      REG_DATA_D_6
 #define REG_DATA_SEG_DP     REG_DATA_D_7
 
+/****************************************************************/
+/*                            SIMBOLS                           */
+/****************************************************************/
+
 #define DIGIT_0         (REG_DATA_SEG_A|REG_DATA_SEG_B|REG_DATA_SEG_C|REG_DATA_SEG_D|REG_DATA_SEG_E|REG_DATA_SEG_F)
 #define DIGIT_1         (REG_DATA_SEG_B|REG_DATA_SEG_C)
 #define DIGIT_2         (REG_DATA_SEG_A|REG_DATA_SEG_B|REG_DATA_SEG_G|REG_DATA_SEG_E|REG_DATA_SEG_D)
@@ -117,11 +121,60 @@
 #define SIGN_UPR_N      (REG_DATA_SEG_A|REG_DATA_SEG_B|REG_DATA_SEG_F)
 #define SIGN_TIRE       (REG_DATA_SEG_G)    
 
-typedef enum
-{
-	LEFT_SPACE,
-	LEFT_ZERO
-}EnumLeftSign;
+/****************************************************************/
+/*                        SIMBOL INDEXES                        */
+/****************************************************************/
+
+#define DIGIT_0_IX				0
+#define DIGIT_1_IX				1
+#define DIGIT_2_IX				2
+#define DIGIT_3_IX				3
+#define DIGIT_4_IX				4
+#define DIGIT_5_IX				5
+#define DIGIT_6_IX				6
+#define DIGIT_7_IX				7
+#define DIGIT_8_IX				8
+#define DIGIT_9_IX				9
+#define DIGIT_POINT_IX		10
+#define SIGN_A_IX					11   
+#define SIGN_E_IX					12          
+#define SIGN_C_IX					13          
+#define SIGN_F_IX					14          
+#define SIGN_H_IX					15          
+#define SIGN_L_IX					16          
+#define SIGN_P_IX					17          
+#define SIGN_U_IX					18          
+#define SIGN_UNDSCR_IX		19     
+#define SIGN_UPRSCR_IX		20     
+#define SIGN_UND_O_IX			21          
+#define SIGN_UPR_O_IX			22      
+#define SIGN_UND_U_IX			23              
+#define SIGN_UND_R_IX			24                  
+#define SIGN_UND_T_IX			25      
+#define SIGN_UND_C_IX			26          
+#define SIGN_UPR_C_IX			27      
+#define SIGN_UND_N_IX			28             
+#define SIGN_UPR_N_IX			29      
+#define SIGN_TIRE_IX			30        
+#define SIGN_CLEAR_IX			31				
+
+
+
+
+
+
+
+
+
+
+
+
+
+//typedef enum
+//{
+//	LEFT_SPACE,
+//	LEFT_ZERO
+//}EnumLeftSign;
 
 __INLINE void latch_max7219(void);
 __INLINE void set_data_bit(uint32_t val);
@@ -135,7 +188,7 @@ void Max7219_ShowAtPositionNumber(uint32_t position, uint32_t number);
 void show_err_on_display_0(void);
 void show_err_on_display_1(void);
 
-void Max7219_DisplayBcdArray(EnumLeftSign, uint8_t* p_ary_bcd);
+void Max7219_DisplayBcdArray(uint8_t* p_ary_bcd);
 
 
 

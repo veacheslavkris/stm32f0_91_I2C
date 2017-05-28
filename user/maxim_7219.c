@@ -1,14 +1,16 @@
 #include "maxim_7219.h"
 
-#define NUMBERS 	10
-#define POSITIONS 8
+#define NUMBERS 			10
+#define POSITIONS 		8
+#define SYMBOLS_CNT 	40
 
 
 
 
-uint32_t ary_numbers[NUMBERS]= {DIGIT_0,DIGIT_1,DIGIT_2,DIGIT_3,DIGIT_4,DIGIT_5,DIGIT_6,DIGIT_7,DIGIT_8,DIGIT_9};
+//uint32_t ary_numbers[NUMBERS]= {DIGIT_0,DIGIT_1,DIGIT_2,DIGIT_3,DIGIT_4,DIGIT_5,DIGIT_6,DIGIT_7,DIGIT_8,DIGIT_9};
 uint32_t ary_positions[POSITIONS]= {ADDR_DIG_0,ADDR_DIG_1,ADDR_DIG_2,ADDR_DIG_3,ADDR_DIG_4,ADDR_DIG_5,ADDR_DIG_6,ADDR_DIG_7};
 
+uint32_t ary_symbols[SYMBOLS_CNT];
 
 /******************************************************************************/
 /*                          INITIALIZATION PARAMS                             */
@@ -51,6 +53,43 @@ void Max7219_Init(void)
 	config_max7219(ADDR_SCAN_LIMIT, DISPLAY_DIGIT_01234567 );
 	config_max7219(ADDR_SHUTDOWN, SD_NORMAL_OPERATION);
 	config_max7219(ADDR_DISPLAY_TEST, DT_NORMAL_OPERATION);
+	
+	ary_symbols[0]= DIGIT_0;
+	ary_symbols[1]= DIGIT_1;
+	ary_symbols[2]= DIGIT_2;
+	ary_symbols[3]= DIGIT_3;
+	ary_symbols[4]= DIGIT_4;
+	ary_symbols[5]= DIGIT_5;
+	ary_symbols[6]= DIGIT_6;
+	ary_symbols[7]= DIGIT_7;
+	ary_symbols[8]= DIGIT_8;
+	ary_symbols[9]= DIGIT_9;
+	ary_symbols[DIGIT_POINT_IX]= DIGIT_POINT;
+	ary_symbols[SIGN_A_IX]= SIGN_A;
+	ary_symbols[SIGN_E_IX]= SIGN_E;
+	ary_symbols[SIGN_C_IX]= SIGN_C;
+	ary_symbols[SIGN_F_IX]= SIGN_F;
+	ary_symbols[SIGN_H_IX]= SIGN_H;
+	ary_symbols[SIGN_L_IX]= SIGN_L;
+	ary_symbols[SIGN_P_IX]= SIGN_P;
+	ary_symbols[SIGN_U_IX]= SIGN_U;
+	ary_symbols[SIGN_UNDSCR_IX]= SIGN_UNDSCR;
+	ary_symbols[SIGN_UPRSCR_IX]= SIGN_UPRSCR;
+	ary_symbols[SIGN_UND_O_IX]= SIGN_UND_O;
+	ary_symbols[SIGN_UPR_O_IX]= SIGN_UPR_O;
+	ary_symbols[SIGN_UND_U_IX]= SIGN_UND_U;
+	ary_symbols[SIGN_UND_R_IX]= SIGN_UND_R;
+	ary_symbols[SIGN_UND_T_IX]= SIGN_UND_T;
+	ary_symbols[SIGN_UND_C_IX]= SIGN_UND_C;
+	ary_symbols[SIGN_UPR_C_IX]= SIGN_UPR_C;
+	ary_symbols[SIGN_UND_N_IX]= SIGN_UND_N;
+	ary_symbols[SIGN_UPR_N_IX]= SIGN_UPR_N;
+	ary_symbols[SIGN_TIRE_IX]= SIGN_TIRE;
+	ary_symbols[SIGN_CLEAR_IX]= REG_DATA_CLEAR;
+
+
+	
+	
 }
 //
 
@@ -58,7 +97,9 @@ void Max7219_ShowAtPositionNumber(uint32_t position, uint32_t number)
 {
 	if((position <= POSITIONS) && (number <= NUMBERS))
 	{
-		send_bits(((ary_positions[position])<<8)|ary_numbers[number]);
+//		send_bits(((ary_positions[position])<<8)|ary_numbers[number]);
+		send_bits(((ary_positions[position])<<8)|ary_symbols[number]);
+
 	}
 	else
 	{
@@ -153,7 +194,7 @@ void Max7219_ClearAllDigits(void)
 }
 //
 
-void Max7219_DisplayBcdArray(EnumLeftSign left_sign, uint8_t* p_ary_bcd)
+void Max7219_DisplayBcdArray(uint8_t* p_ary_bcd)
 {
 	uint32_t ix = 7;
 //	uint32_t checking_state = 1;
@@ -161,11 +202,15 @@ void Max7219_DisplayBcdArray(EnumLeftSign left_sign, uint8_t* p_ary_bcd)
 	
 	for(ix = 7; ix < 8; ix--)
 	{
-		if(left_sign == LEFT_ZERO)
-		{
-			// direct copy
-			send_bits(((ary_positions[ix])<<8)|ary_numbers[p_ary_bcd[ix]]);
-		}
+//		if(left_sign == LEFT_ZERO)
+//		{
+//			// direct copy
+////			send_bits(((ary_positions[ix])<<8)|ary_numbers[p_ary_bcd[ix]]);
+//			send_bits(((ary_positions[ix])<<8)|ary_symbols[p_ary_bcd[ix]]);
+
+//		}
+		
+		send_bits(((ary_positions[ix])<<8)|ary_symbols[p_ary_bcd[ix]]);
 	}
 	
 }

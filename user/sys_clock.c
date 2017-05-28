@@ -31,7 +31,10 @@ void SetSysClock(void)
     StartUpCounter++;  
   } while((HSEStatus == 0) && (StartUpCounter != HSE_STARTUP_TIMEOUT));
 
-  if ((RCC->CR & RCC_CR_HSERDY) != RESET)
+//	RESET = 0, 
+//  SET = !RESET
+	
+  if ((RCC->CR & RCC_CR_HSERDY) != 0)
   {
     HSEStatus = (uint32_t)0x01;
   }

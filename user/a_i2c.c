@@ -93,11 +93,15 @@ float I2C_MasterStartGetTempAutoEnd(I2C_TypeDef* pI2C, uint32_t slaveAddress)
 		
 	pI2C->ISR&=~(I2C_ICR_STOPCF);
 		
-	temp_16 = temp_1<<8;
-	temp_16 = temp_16|temp_2;
-	temp_16 = temp_16 >> 4;
+//	temp_16 = temp_1<<8;
+//	temp_16 = temp_16|temp_2;
+//	temp_16 = temp_16 >> 4;
+//	
+//	temp_f1 = ((float)(temp_16/4)*(float)0.24); 
 	
-	temp_f1 = ((float)(temp_16/4)*(float)0.24); 
+	temp_16 = (temp_1<<4)|(temp_2>>4);
+	
+	temp_f1 = temp_16/16.0f;
 	
 	return temp_f1;
 	

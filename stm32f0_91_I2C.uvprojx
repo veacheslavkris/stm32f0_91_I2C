@@ -439,6 +439,11 @@
               <FileType>1</FileType>
               <FilePath>.\user\DecBcdCharConverter.c</FilePath>
             </File>
+            <File>
+              <FileName>display_max_7219.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\user\display_max_7219.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
