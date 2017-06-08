@@ -1,6 +1,6 @@
  /* Includes ------------------------------------------------------------------*/
 #include "stm32f0xx.h"
-#include "rtc.h"
+#include "rtc_lse_32768.h"
 
 #define RTC_TR_RESERVED_MASK    (0x007F7F7FU)
 #define RTC_DR_RESERVED_MASK    (0x00FFFF3FU) 
@@ -13,69 +13,40 @@
 #define MONTH 		8
 #define YEAR 			9
 
+#define IS_LSE_RDY		((RCC->BDCR & RCC_BDCR_LSERDY) == RCC_BDCR_LSERDY)
+#define IS_RTC_INITS 	((RTC->ISR & RTC_ISR_INITS)==RTC_ISR_INITS)
 
-
-
-
-void turn_rtc_lse_on(void);
-void enable_rtc_init_state(void);
-void disable_rtc_init_state(void);
-void set_rtc_prediv_lse(void);
 uint8_t rtc_bcd2byte(uint8_t);
-void set_bcd_date_time(uint8_t*);
 uint8_t rtc_byte2bcd(uint8_t);
 
-void RtcInitLse()
+void RtcLse32768_Init()
 {
-	turn_rtc_lse_on();
-	set_rtc_prediv_lse();
-}
-
-__INLINE void turn_rtc_lse_on(void)
-{
-  /* Enable the peripheral clock RTC */
-  /* (1) Enable the LSE (LSI) */
-  /* (2) Wait while it is not ready */
-  /* (3) Enable PWR clock */
-  /* (4) Enable write in RTC domain control register */
-  /* (5) LSE (LSI) for RTC clock */
-  /* (6) Disable PWR clock */
-  
-	RCC->APB1ENR |= RCC_APB1ENR_PWREN; /* (3) */
+	enable_RTC_write_access();	
 	
-	/* Enable write access to Backup domain */
-	PWR->CR |= PWR_CR_DBP; /* (4) */
+	RCC->BDCR |= RCC_BDCR_LSEON;
 
-	/* Wait for Backup domain Write protection disable */
-	while((PWR->CR & PWR_CR_DBP)!=PWR_CR_DBP)	continue;
-	
-	RCC->BDCR |= RCC_BDCR_LSEON; /* (1) */
-
-  while((RCC->BDCR & RCC_BDCR_LSERDY)!=RCC_BDCR_LSERDY) /* (2) */
+	/* Wait till LSE is ready */  
+  while((RCC->BDCR & RCC_BDCR_LSERDY)!=RCC_BDCR_LSERDY)
   { 
     /* add time out here for a robust application */
   }
-  	
-  /* Set the new LSE configuration SET_BIT(RCC->BDCR, RCC_BDCR_LSEON) ----------------------*/
-	RCC->BDCR = (RCC->BDCR & ~RCC_BDCR_RTCSEL) | RCC_BDCR_RTCEN | RCC_BDCR_RTCSEL_LSE; /* (5) */
-
-	/* Wait till LSE is ready */  
-	while((RCC->BDCR & RCC_BDCR_LSERDY)!=RCC_BDCR_LSERDY)continue;
+  
+	RCC->BDCR = (RCC->BDCR & ~RCC_BDCR_RTCSEL) | RCC_BDCR_RTCEN | RCC_BDCR_RTCSEL_LSE;
 	
-	/* Disable write access to Backup domain */
-//	PWR->CR &=~PWR_CR_DBP; /* (4) */
+	enable_rtc_init_state();	
 	
-	/* Require to disable power clock if necessary */
-  RCC->APB1ENR &=~ RCC_APB1ENR_PWREN; /* (7) */
-
+	/* (4) set prescaler, 32768/128 => 256 Hz, 256Hz/256 => 1Hz */
+	//	hrtc.Init.AsynchPrediv = 127 - 007F;
+	//  hrtc.Init.SynchPrediv = 255  - 00FF;
+  RTC->PRER = 0x007F00FF; /* (4) */
+	
+	disable_rtc_init_state();
+	
+	disable_RTC_write_access();
 }
+//
 
 void RtcSetDateTime(uint8_t* ary_bcd)
-{
-	set_bcd_date_time(ary_bcd);
-}
-
-void set_bcd_date_time(uint8_t* ary_bcd)
 {
 	uint32_t tmpreg;
 	uint32_t datetmpreg;
@@ -98,7 +69,7 @@ void set_bcd_date_time(uint8_t* ary_bcd)
 
 	*/
 
-
+	enable_RTC_write_access();
 
 	enable_rtc_init_state();
 
@@ -120,47 +91,10 @@ void set_bcd_date_time(uint8_t* ary_bcd)
   RTC->DR = (uint32_t)(datetmpreg & RTC_DR_RESERVED_MASK);
 
 	disable_rtc_init_state();
-}
 
-__INLINE void set_rtc_prediv_lse(void)
-{
-	enable_rtc_init_state();
-
-	/* (4) set prescaler, 32768/128 => 256 Hz, 256Hz/256 => 1Hz */
-	//	hrtc.Init.AsynchPrediv = 127 - 007F;
-	//  hrtc.Init.SynchPrediv = 255  - 00FF;
-  RTC->PRER = 0x007F00FF; /* (4) */
-	
-	disable_rtc_init_state();
+	disable_RTC_write_access();
 }
-
-__INLINE void enable_rtc_init_state(void)
-{
-  /* RTC init mode */
-  /* Configure RTC */
-  /* (1) Write access for RTC registers */
-  /* (2) Enable init phase */
-  /* (3) Wait until it is allow to modify RTC register values */
-	
-  RTC->WPR = 0xCA; /* (1) */ 
-  RTC->WPR = 0x53; /* (1) */
-  RTC->ISR |= RTC_ISR_INIT; /* (2) */
-  
-	while((RTC->ISR & RTC_ISR_INITF)!=RTC_ISR_INITF) /* (3) */
-  { 
-    /* add time out here for a robust application */
-  }
-}
-
-__INLINE void disable_rtc_init_state(void)
-{
-	/* (6) Disable init phase */
-  /* (7) Disable write access for RTC registers */
-		
-	RTC->ISR &=~ RTC_ISR_INIT; /* (6) */
-  RTC->WPR = 0xFE; /* (7) */
-  RTC->WPR = 0x64; /* (7) */
-}
+//
 
 void RtcGetCurDateTime_BIN(RTC_TimeTypeDef* sttTime, RTC_DateTypeDef* sttDate)
 {
@@ -198,6 +132,7 @@ void RtcGetCurDateTime_BIN(RTC_TimeTypeDef* sttTime, RTC_DateTypeDef* sttDate)
 	sttDate->Month = (uint8_t)rtc_bcd2byte(sttDate->Month);
 	sttDate->Date = (uint8_t)rtc_bcd2byte(sttDate->Date);  
 }
+//
 
 void RtcGetCurDateTime_BCD(RTC_BCD_TimeTypeDef* sttTime, RTC_BCD_DateTypeDef* sttDate)
 {
@@ -243,6 +178,7 @@ void RtcGetCurDateTime_BCD(RTC_BCD_TimeTypeDef* sttTime, RTC_BCD_DateTypeDef* st
 	sttDate->WeekDayU = (uint8_t)((datetmpreg & (RTC_DR_WDU)) >> 13U); 
 
 }
+//
 
 uint8_t rtc_bcd2byte(uint8_t Value)
 {
@@ -250,6 +186,7 @@ uint8_t rtc_bcd2byte(uint8_t Value)
   tmp = ((uint8_t)(Value & (uint8_t)0xF0U) >> (uint8_t)0x4U) * 10U;
   return (tmp + (Value & (uint8_t)0x0FU));
 }
+//
 
 uint8_t rtc_byte2bcd(uint8_t Value)
 {
@@ -263,4 +200,17 @@ uint8_t rtc_byte2bcd(uint8_t Value)
   
   return  ((uint8_t)(bcdhigh << 4U) | Value);
 }
+//
+
+uint32_t IsRTC_Run(void)
+{
+	if(IS_LSE_RDY && IS_RTC_INITS)
+	{
+		return 1;
+	}
+	else return 0;
+
+}
+//
+
 

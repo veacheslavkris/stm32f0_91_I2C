@@ -400,11 +400,6 @@
               <FilePath>.\user\maxim_7219.c</FilePath>
             </File>
             <File>
-              <FileName>rtc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\user\rtc.c</FilePath>
-            </File>
-            <File>
               <FileName>Uart8.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\user\Uart8.c</FilePath>
@@ -443,6 +438,16 @@
               <FileName>display_max_7219.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\user\display_max_7219.c</FilePath>
+            </File>
+            <File>
+              <FileName>rtc_lse_32768.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\user\rtc_lse_32768.c</FilePath>
+            </File>
+            <File>
+              <FileName>systick.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\user\systick.c</FilePath>
             </File>
           </Files>
         </Group>

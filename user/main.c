@@ -19,9 +19,10 @@
 /* Private variables ---------------------------------------------------------*/
 	uint32_t state_run = 0;
 	float cur_temp = 0;
-	volatile uint32_t systick_count =0;
-
 	StructFloatToBcd structFloatToBcd;
+
+
+
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 
@@ -40,7 +41,7 @@ int main(void)
 	SystemCoreClockUpdate();
 	SysTick_Config(SystemCoreClock/1000);/* 1ms config with HSE 8MHz/system 48Mhz*/
 
-	RtcInitLse();
+	RtcLse32768_Init();
 	
 	I2C2_Init();
 	
@@ -49,13 +50,13 @@ int main(void)
 
 	Max7219_ClearAllDigits();
 	
-	delay_systick(1000);
+	DelaySystick(1000);
 	
 	Max7219_ShowAtPositionNumber(11, 0);
 
-	delay_systick(2000);
+	DelaySystick(2000);
 	Max7219_ShowAtPositionNumber(0, 15);
-	delay_systick(2000);
+	DelaySystick(2000);
 
 	Max7219_ClearAllDigits();
 
@@ -67,7 +68,7 @@ int main(void)
 	LedPA5_Init();
 	
 	LED_ON;
-	delay_systick(2000);
+	DelaySystick(2000);
 	LED_OFF;
 
 	structFloatToBcd.float_count=2;
@@ -83,23 +84,12 @@ int main(void)
 			
 			ConvertFloatToBcd(&structFloatToBcd);
 			
-//			Max7219_DisplayBcdArray(LEFT_ZERO, structFloatToBcd.ary_bcd);
 			DisplayMax7219_TT_tt(0, &structFloatToBcd);
 			
 			state_run = 0;
 		}
-		
-//		cycle_digits();
-//		delay_systick(1000);
+
   }
-
-}
-
-void delay_systick(uint32_t ms)
-{
-	systick_count = ms;
-	
-	while(systick_count !=0) continue;
 
 }
 
@@ -156,12 +146,7 @@ void PendSV_Handler(void)
 {
 }
 //
-void SysTick_Handler(void)
-{
-	if(systick_count > 0) systick_count--;
-	
-}
-//
+
 /******************************************************************************/
 /*                 STM32F0xx Peripherals Interrupt Handlers                   */
 /*  Add here the Interrupt Handler for the used peripheral(s) (PPP), for the  */
