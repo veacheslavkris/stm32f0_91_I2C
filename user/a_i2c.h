@@ -2,8 +2,16 @@
 	#define A_I2C_H
 
 #include "stm32f091xc.h"
+#include "i2c_structs.h"	
 	
-//#include "stdint.h"
+	
+#define  I2C_GENERATE_STOP              I2C_CR2_STOP
+#define  I2C_GENERATE_START_READ        (uint32_t)(I2C_CR2_START | I2C_CR2_RD_WRN)
+#define  I2C_GENERATE_START_WRITE       I2C_CR2_START
+
+#define  I2C_RELOAD_MODE                I2C_CR2_RELOAD
+#define  I2C_AUTOEND_MODE               I2C_CR2_AUTOEND
+	
 	
 /* I2C slave address to communicate with */
 #define TMP275_ADDRESS	(uint32_t)0x48
