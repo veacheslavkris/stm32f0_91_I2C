@@ -29,10 +29,13 @@ uint32_t I2C_MasterStartSendOneByteAutoEnd(I2C_TypeDef* pI2C, uint32_t slaveAddr
 	
 float I2C_MasterStartGetTempAutoEnd(I2C_TypeDef* pI2C, uint32_t slaveAddress);
 
+void I2C_TransferConfig(I2C_TypeDef* pI2C,  uint16_t DevAddress, uint8_t Size, uint32_t Mode, uint32_t Request);
 
+I2CStateEnum I2C_IsAcknowledgeFailed(I2C_TypeDef* pI2C);
 
+I2CStateEnum HAL_I2C_Master_Receive(I2CStructHandle* pHI2C);
 
-
+I2CStateEnum HAL_I2C_Master_Transmit(I2CStructHandle* pHI2C);
 
 
 

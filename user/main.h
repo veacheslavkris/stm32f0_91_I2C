@@ -2,6 +2,8 @@
 #include "sys_clock.h"
 #include "systick.h"
 #include "i2c2.h"
+#include "handle_i2c.h"
+
 #include "display_max_7219.h"
 #include "rtc_lse_32768.h"
 #include "uart8.h"
