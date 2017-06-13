@@ -207,6 +207,12 @@ I2CStateEnum HAL_I2C_Master_Receive(I2CStructHandle* pHI2C)
 		}
 		else return nack_state; // is error state: I2C_STATE_TIMEOUT_NACK_STOP, I2C_STATE_NACK_STOP
 	}
+
+	/* Read data from RXDR */
+	pHI2C->RxBuff.ary_data[pHI2C->RxBuff.ix_ary++] = pHI2C->pI2C->RXDR;
+	pHI2C->RxBuff.transfer_size--;
+	
+	
 	
 	while(pHI2C->RxBuff.transfer_size > 0U)
 	{

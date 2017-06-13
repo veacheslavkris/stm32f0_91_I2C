@@ -87,8 +87,11 @@ int main(void)
 			float temp_f1 = 0.0;
 			I2CStateEnum i2c_state;
 			
-			cur_temp = 0;
 			
+			
+			
+//			cur_temp = 0;
+//			
 //			cur_temp = I2C_MasterStartGetTempAutoEnd(I2C2, TMP275_ADDRESS);
 //			structFloatToBcd.flt = cur_temp;
 			
@@ -97,19 +100,35 @@ int main(void)
 			
 			i2c_state = HAL_I2C_Master_Receive(pHI2C);
 			
-			temp_1 = pHI2C->RxBuff.ary_data[0];
-			temp_2 = pHI2C->RxBuff.ary_data[1];
 
-			temp_16 = (temp_1<<4)|(temp_2>>4);
-	
-			temp_f1 = temp_16/16.0f;
-			
-			structFloatToBcd.flt = temp_f1;
 			
 			
-			ConvertFloatToBcd(&structFloatToBcd);
 			
-			DisplayMax7219_TT_tt(0, &structFloatToBcd);
+			Max7219_ClearAllDigits();
+			DelaySystick(1500);
+			
+			if(i2c_state!=I2C_STATE_TRANSFER_DONE)show_err_on_display_0();
+			else 
+			{
+				
+				temp_1 = pHI2C->RxBuff.ary_data[0];
+				temp_2 = pHI2C->RxBuff.ary_data[1];
+
+				temp_16 = (temp_1<<4)|(temp_2>>4);
+		
+				temp_f1 = temp_16/16.0f;
+				
+				structFloatToBcd.flt = temp_f1;
+				ConvertFloatToBcd(&structFloatToBcd);
+			
+				DisplayMax7219_TT_tt(0, &structFloatToBcd);
+			}
+			
+			
+			
+			
+			
+
 			
 			state_run = 0;
 		}
