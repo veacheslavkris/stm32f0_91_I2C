@@ -1,8 +1,7 @@
-#ifndef A_I2C_H
-	#define A_I2C_H
+#ifndef I2C_H
+	#define I2C_H
 
 #include "stm32f091xc.h"
-#include "i2c_structs.h"	
 	
 	
 #define  I2C_GENERATE_STOP              I2C_CR2_STOP
@@ -14,7 +13,7 @@
 	
 	
 /* I2C slave address to communicate with */
-#define TMP275_ADDRESS	(uint32_t)0x48
+//#define TMP275_ADDRESS	(uint32_t)0x48
 
 #define TRANSFER_DIR_WRITE	(uint32_t)0
 #define TRANSFER_DIR_READ		(uint32_t)1
@@ -23,11 +22,47 @@
 #define REG_CONF_PTR     (uint32_t)0x01u
 
 
-void I2C_ConfigMstrTimingPe(I2C_TypeDef* pI2C);
+#define I2C_BUFF_ARY_SIZE	16
 
-uint32_t I2C_MasterStartSendOneByteAutoEnd(I2C_TypeDef* pI2C, uint32_t slaveAddress, uint32_t data_byte);
+typedef enum
+{
+
+	I2C_STATE_TRANSFER_DONE,
+	I2C_STATE_TIMEOUT_AUTOEND_STOP,
+	I2C_STATE_TIMEOUT_NACK_STOP,
+	I2C_STATE_TIMEOUT_RXNE,
+	I2C_STATE_TIMEOUT_TXIS,
+	I2C_STATE_NOT_NACK,
+	I2C_STATE_NACK_STOP,
+	I2C_STATE_RXNE,
+	I2C_STATE_TXIS,
+	I2C_STATE_STOP
 	
-float I2C_MasterStartGetTempAutoEnd(I2C_TypeDef* pI2C, uint32_t slaveAddress);
+}I2CStateEnum;
+
+typedef struct
+{
+	uint32_t ary_size;
+	uint32_t transfer_size;
+	uint32_t ix_ary;
+	uint8_t ary_data[I2C_BUFF_ARY_SIZE];
+	
+}
+I2CStructData;
+//
+
+typedef struct
+{
+	I2C_TypeDef* pI2C;
+	I2CStructData RxBuff;
+	I2CStructData TxBuff;
+	uint32_t devAddress;
+
+}
+I2CStructHandle;
+
+
+void I2C_ConfigTimingPe(I2C_TypeDef* pI2C);
 
 void I2C_TransferConfig(I2C_TypeDef* pI2C,  uint16_t DevAddress, uint8_t Size, uint32_t Mode, uint32_t Request);
 

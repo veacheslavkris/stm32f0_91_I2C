@@ -1,8 +1,7 @@
 #include "stm32f091xc.h"
 #include "sys_clock.h"
 #include "systick.h"
-#include "i2c2.h"
-#include "handle_i2c.h"
+#include "TMP275.h"
 
 #include "display_max_7219.h"
 #include "rtc_lse_32768.h"

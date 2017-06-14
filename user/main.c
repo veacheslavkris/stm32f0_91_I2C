@@ -44,9 +44,8 @@ int main(void)
 
 	RtcLse32768_Init();
 	
-	I2C2_Init();
-	I2C2_InitHandle();
-	pHI2C = I2C2_GetHandle();
+	TMP275_Init();
+	pHI2C = TMP275_GetHandle();
 	
 	
 	/* MAX 7219 */ 
@@ -81,54 +80,19 @@ int main(void)
   {
 		if(state_run == 1)
 		{
-			uint8_t temp_1 = 0x00;
-			uint8_t temp_2 = 0x00;
-			uint32_t temp_16 = 0;
-			float temp_f1 = 0.0;
-			I2CStateEnum i2c_state;
-			
-			
-			
-			
-//			cur_temp = 0;
-//			
-//			cur_temp = I2C_MasterStartGetTempAutoEnd(I2C2, TMP275_ADDRESS);
-//			structFloatToBcd.flt = cur_temp;
-			
-			I2C2_ClearHandle();
-			pHI2C->RxBuff.transfer_size=2;
-			
-			i2c_state = HAL_I2C_Master_Receive(pHI2C);
-			
-
-			
-			
-			
+			TMP275ExecutionResult* tmp275result = TMP275GetTemperature();
+						
 			Max7219_ClearAllDigits();
 			DelaySystick(1500);
 			
-			if(i2c_state!=I2C_STATE_TRANSFER_DONE)show_err_on_display_0();
-			else 
+			if(tmp275result->execState == MEASUREMENT_SUCCESSFULL)
 			{
-				
-				temp_1 = pHI2C->RxBuff.ary_data[0];
-				temp_2 = pHI2C->RxBuff.ary_data[1];
-
-				temp_16 = (temp_1<<4)|(temp_2>>4);
-		
-				temp_f1 = temp_16/16.0f;
-				
-				structFloatToBcd.flt = temp_f1;
+				structFloatToBcd.flt = tmp275result->temprt;
 				ConvertFloatToBcd(&structFloatToBcd);
 			
 				DisplayMax7219_TT_tt(0, &structFloatToBcd);
 			}
-			
-			
-			
-			
-			
-
+			else show_err_on_display_0();
 			
 			state_run = 0;
 		}

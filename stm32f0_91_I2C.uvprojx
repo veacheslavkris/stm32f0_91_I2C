@@ -420,16 +420,6 @@
               <FilePath>.\user\pa5_led.c</FilePath>
             </File>
             <File>
-              <FileName>a_i2c.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\user\a_i2c.c</FilePath>
-            </File>
-            <File>
-              <FileName>i2c2.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\user\i2c2.c</FilePath>
-            </File>
-            <File>
               <FileName>DecBcdCharConverter.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\user\DecBcdCharConverter.c</FilePath>
@@ -450,9 +440,14 @@
               <FilePath>.\user\systick.c</FilePath>
             </File>
             <File>
-              <FileName>handle_i2c.c</FileName>
+              <FileName>i2c.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\user\handle_i2c.c</FilePath>
+              <FilePath>.\user\i2c.c</FilePath>
+            </File>
+            <File>
+              <FileName>TMP275.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\user\TMP275.c</FilePath>
             </File>
           </Files>
         </Group>

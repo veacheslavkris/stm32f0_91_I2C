@@ -1,4 +1,4 @@
-#include "a_i2c.h"
+#include "i2c.h"
 
 
 	/**
@@ -18,9 +18,10 @@
 
   #define TIMEOUT_I2C						1000
   
+
+
 	
-	
-void I2C_ConfigMstrTimingPe(I2C_TypeDef* pI2C)
+void I2C_ConfigTimingPe(I2C_TypeDef* pI2C)
 {
   /* Configure I2C2, master */
   /* (1) Timing register value is computed with the AN4235 xls file,
@@ -32,84 +33,8 @@ void I2C_ConfigMstrTimingPe(I2C_TypeDef* pI2C)
 
 }
 
-uint32_t I2C_MasterStartSendOneByteAutoEnd(I2C_TypeDef* pI2C, uint32_t slaveAddress, uint32_t data_byte)
-{
-	// set: autoend, slave address
-	pI2C->CR2 |=  I2C_CR2_AUTOEND|(((uint8_t)slaveAddress)<<1);
-
-	// send write state
-	pI2C->CR2 &= ~(I2C_CR2_RD_WRN);
-	
-	// set count 1 byte
-	pI2C->CR2 |= 1<<16;
-
-	
-
-	pI2C->CR2|=I2C_CR2_START; // Go
-	
-	/* Wait until TXIS flag is set */
-	
-	/* - 1. Check if a NACK is detected */
-	/* - 2. Check for the Timeout */
-	while((pI2C->ISR & I2C_ISR_TXIS) == I2C_ISR_TXIS) continue;
-	
-	pI2C->TXDR = (uint8_t)data_byte; /* Byte to send */
-	
-	/* No need to Check TC flag, with AUTOEND mode the stop is automatically generated */
-  /* Wait until STOPF flag is set */
-	while((pI2C->ISR & I2C_ISR_STOPF) != I2C_ISR_STOPF) continue;
-	pI2C->ISR&=~(I2C_ICR_STOPCF);
-	
-	return 0;
 
 
-}
-
-float I2C_MasterStartGetTempAutoEnd(I2C_TypeDef* pI2C, uint32_t slaveAddress)
-{
-	uint8_t temp_1 = 0x00;
-	uint8_t temp_2 = 0x00;
-	uint32_t temp_16 = 0;
-	float temp_f1 = 0.0;
-	uint32_t cnt = 0;
-	
-	// set: autoend, read state, slave address
-	pI2C->CR2 |=  I2C_CR2_AUTOEND|I2C_CR2_RD_WRN|(((uint8_t)slaveAddress)<<1);
-
-	// set count 2 bytes
-	pI2C->CR2 |= 2<<16;
-	
-	pI2C->CR2|=I2C_CR2_START; // Go
-	
-	while(cnt<2)
-	{
-		/* while wait for I2C_ISR_RXNE */
-		
-		/*	- 1. Check if a NACK is detected		*/
-		/*	- 2. Check if a STOPF is detected		*/
-		/*	- 3. Check for the Timeout					*/
-		
-		if((pI2C->ISR & I2C_ISR_RXNE) == I2C_ISR_RXNE)
-		{
-			/* Read receive register, will clear RXNE flag */
-			if(cnt == 0) temp_1 = pI2C->RXDR;
-			else if(cnt == 1) temp_2 = pI2C->RXDR;
-			
-			cnt++;
-		}
-	}
-	
-	while((pI2C->ISR & I2C_ISR_STOPF) != I2C_ISR_STOPF) continue;
-		
-	pI2C->ISR&=~(I2C_ICR_STOPCF);
-		
-	temp_16 = (temp_1<<4)|(temp_2>>4);
-	
-	temp_f1 = temp_16/16.0f;
-	
-	return temp_f1;
-	
-}
 
 /*********************************************************************************/
 /*                                                                               */
@@ -117,7 +42,7 @@ float I2C_MasterStartGetTempAutoEnd(I2C_TypeDef* pI2C, uint32_t slaveAddress)
 /*                                                                               */
 /*********************************************************************************/
 
-// Mode			:		I2C_AUTOEND_MODE, I2C_RELOAD_MODE
+// Mode		:		I2C_AUTOEND_MODE, I2C_RELOAD_MODE
 // Request	:		I2C_GENERATE_START_READ, I2C_GENERATE_START_WRITE
 void I2C_TransferConfig(I2C_TypeDef* pI2C,  uint16_t DevAddress, uint8_t Size, uint32_t Mode, uint32_t Request)
 {
@@ -312,6 +237,9 @@ I2CStateEnum HAL_I2C_Master_Transmit(I2CStructHandle* pHI2C)
 
 	return I2C_STATE_TRANSFER_DONE;
 }
+
+
+
 
 
 
