@@ -21,9 +21,6 @@
 	float cur_temp = 0;
 	StructFloatToBcd structFloatToBcd;
 
-	I2CStructHandle* pHI2C;
-
-
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 
@@ -44,9 +41,8 @@ int main(void)
 
 	RtcLse32768_Init();
 	
-	TMP275_Init();
-	pHI2C = TMP275_GetHandle();
-	
+//	TMP275_Init();
+	EEPROM_2Kb_Init();
 	
 	/* MAX 7219 */ 
 	Max7219_Init();
@@ -66,7 +62,7 @@ int main(void)
 	Max7219_ShowAtPositionNumber(0,0);
 	Max7219_ShowAtPositionNumber(4,0);
 
-  BtnPc13_Init();
+	BtnPc13_Init();
 	
 	LedPA5_Init();
 	
@@ -80,19 +76,24 @@ int main(void)
   {
 		if(state_run == 1)
 		{
-			TMP275ExecutionResult* tmp275result = TMP275GetTemperature();
-						
-			Max7219_ClearAllDigits();
-			DelaySystick(1500);
+//			TMP275ExecutionResult* tmp275result = TMP275GetTemperature();
+//						
+//			Max7219_ClearAllDigits();
+//			DelaySystick(1500);
+//			
+//			if(tmp275result->execState == MEASUREMENT_SUCCESSFULL)
+//			{
+//				structFloatToBcd.flt = tmp275result->temprt;
+//				ConvertFloatToBcd(&structFloatToBcd);
+//			
+//				DisplayMax7219_TT_tt(0, &structFloatToBcd);
+//			}
+//			else show_err_on_display_0();
 			
-			if(tmp275result->execState == MEASUREMENT_SUCCESSFULL)
-			{
-				structFloatToBcd.flt = tmp275result->temprt;
-				ConvertFloatToBcd(&structFloatToBcd);
 			
-				DisplayMax7219_TT_tt(0, &structFloatToBcd);
-			}
-			else show_err_on_display_0();
+			
+			
+			I2CStructHandle* result =  EEPROM_2Kb_Read(10, 20);
 			
 			state_run = 0;
 		}

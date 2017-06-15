@@ -9,7 +9,7 @@
 #define PIN_SDA			11
 #define PORT_I2C		GPIOB
 
-#define I2C					I2C2
+#define I2C				I2C2
 
 
 
@@ -19,15 +19,14 @@ typedef enum
 	MEASUREMENT_FAIL
 }
 TMP275ExecutionEnum;
-
+//
 typedef struct
 {
 	float temprt;
 	TMP275ExecutionEnum execState;
-
 }
 TMP275ExecutionResult;
-
+//
 
 
 
@@ -48,11 +47,6 @@ __STATIC_INLINE void i2c_init(void)
 	I2C_ConfigTimingPe(I2C);
 }
 //
-
-I2CStructHandle* TMP275_GetHandle(void);
-
-//void TMP275_ClearBuffers(void);
-
 
 
 TMP275ExecutionResult* TMP275GetTemperature(void);

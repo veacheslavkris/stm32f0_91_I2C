@@ -1,47 +1,38 @@
 #include "TMP275.h"
 
 #define TMP275_ADDRESS	(uint32_t)0x48
+
+#define RX_BUFF_ARY_SIZE	2
+#define TX_BUFF_ARY_SIZE	2
 	
-	
-I2CStructHandle handleI2C;
+I2CStructHandle handleTMP275;
 TMP275ExecutionResult execResult;
 
-void clear_buffer(I2CStructData* pI2CStructData)
-{
-	uint32_t ix = 0;
-	
-	for(ix=0; ix< pI2CStructData->ary_size; ix++)
-	{
-		pI2CStructData->ary_data[ix]=0;
-	}
-	
-	pI2CStructData->ix_ary = 0;
-	pI2CStructData->transfer_size=0;
-}
+uint8_t ary_rx_buff[RX_BUFF_ARY_SIZE]={0,0};
+uint8_t ary_tx_buff[TX_BUFF_ARY_SIZE]={0,0}; 
 
-void init_handle(void)
+
+void init_handle_tpm275(void)
 {
-	handleI2C.pI2C = I2C;
-	handleI2C.devAddress = TMP275_ADDRESS;
+	handleTMP275.pI2C = I2C;
+	handleTMP275.devAddress = TMP275_ADDRESS;
 	
-	handleI2C.RxBuff.ary_size = I2C_BUFF_ARY_SIZE;
-	handleI2C.TxBuff.ary_size = I2C_BUFF_ARY_SIZE;
+	handleTMP275.RxBuff.ary_size = RX_BUFF_ARY_SIZE;
+	handleTMP275.RxBuff.p_ary_data = ary_rx_buff;
 	
-	clear_buffer(&handleI2C.RxBuff);
-	clear_buffer(&handleI2C.TxBuff);
+	
+	handleTMP275.TxBuff.ary_size = TX_BUFF_ARY_SIZE;
+	handleTMP275.TxBuff.p_ary_data = ary_tx_buff;
+	
+	clear_buffer(&handleTMP275.RxBuff);
+	clear_buffer(&handleTMP275.TxBuff);
 }
 
 void TMP275_Init(void)
 {
 	i2c_init();
-	init_handle();
+	init_handle_tpm275();
 }
-
-I2CStructHandle* TMP275_GetHandle(void)
-{
-	return &handleI2C;
-}
-
 
 TMP275ExecutionResult* TMP275GetTemperature(void)
 {
@@ -51,17 +42,16 @@ TMP275ExecutionResult* TMP275GetTemperature(void)
 	
 	I2CStateEnum i2c_state;
 
-	clear_buffer(&handleI2C.RxBuff);
-	clear_buffer(&handleI2C.TxBuff);
-	handleI2C.RxBuff.transfer_size=2;
+	I2C_ClearHandleBuffers(&handleTMP275);
+	handleTMP275.RxBuff.transfer_size=2;
 
-	i2c_state = HAL_I2C_Master_Receive(&handleI2C);
+	i2c_state = HAL_I2C_Master_Receive(&handleTMP275);
 
 	if(i2c_state==I2C_STATE_TRANSFER_DONE)
 	{
 
-		temp_1 = handleI2C.RxBuff.ary_data[0];
-		temp_2 = handleI2C.RxBuff.ary_data[1];
+		temp_1 = handleTMP275.RxBuff.p_ary_data[0];
+		temp_2 = handleTMP275.RxBuff.p_ary_data[1];
 
 		temp_16 = (temp_1<<4)|(temp_2>>4);
 
