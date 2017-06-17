@@ -196,56 +196,70 @@ I2CStateEnum HAL_I2C_Master_Transmit(I2CStructHandle* pHI2C)
 }
 //
 
-I2CStateEnum I2C_EEPROM_SetMemAddress(I2CStructHandle* pHI2C)
+I2CStateEnum I2C_EEPROM_SetMemAddress(I2C_TypeDef* pI2C, uint32_t i2c_address, uint32_t cnt_bytes_mem_address, uint8_t* p_mem_address)
 {
 	uint32_t timeout;
 	I2CStateEnum nack_state;
-	pHI2C->TxBuff.ix_ary = 0;
+
 	
 	// send start and address
-	I2C_TransferConfig(pHI2C->pI2C, pHI2C->devAddress, 1, I2C_SOFTEND_MODE, I2C_GENERATE_START_WRITE);
+	I2C_TransferConfig(pI2C, i2c_address, cnt_bytes_mem_address, I2C_SOFTEND_MODE, I2C_GENERATE_START_WRITE);
 	
 	timeout = 0;
 	
-	/* Wait until TXIS flag is set */
-	while((pHI2C->pI2C->ISR & I2C_ISR_TXIS) == 0U)
+	// transfer bytes_mem_address
+	while(cnt_bytes_mem_address > 0U)
 	{
-		/* Check if a NACK is detected */
-		nack_state = I2C_IsAcknowledgeFailed(pHI2C->pI2C);
-		
-		if(nack_state == I2C_STATE_NOT_NACK)
+		/* Wait until TXIS flag is set */
+		while((pI2C->ISR & I2C_ISR_TXIS) == 0U)
 		{
-			/* Check for the Timeout */
-			/* Check for the Timeout */
-			if(timeout < TIMEOUT_TXIS) timeout++;
-			else return I2C_STATE_TIMEOUT_TXIS;
+			/* Check if a NACK is detected */
+			nack_state = I2C_IsAcknowledgeFailed(pI2C);
+			
+			if(nack_state == I2C_STATE_NOT_NACK)
+			{
+				/* Check for the Timeout */
+				/* Check for the Timeout */
+				if(timeout < TIMEOUT_TXIS) timeout++;
+				else return I2C_STATE_TIMEOUT_TXIS;
+			}
+			else // NACK is detected
+			{		
+				return nack_state;  // is error state: I2C_STATE_TIMEOUT_NACK_STOP, I2C_STATE_NACK_STOP
+			}
 		}
-		else return nack_state;  // is error state: I2C_STATE_TIMEOUT_NACK_STOP, I2C_STATE_NACK_STOP
+		
+		/* Write data to TXDR */
+		pI2C->TXDR	= (*p_mem_address++);
+		cnt_bytes_mem_address--;
 	}
 	
-	/* Write memory address to TXDR */
-	pHI2C->pI2C->TXDR = pHI2C->TxBuff.p_ary_data[0];
+	// one or two bytes of mem address is transfered
 	
 	timeout = 0;
 	
 	/* Need to check TC flag, while SOFTEND mode is set */
 	/* Wait until TC flag is set */
-	while((pHI2C->pI2C->ISR & I2C_ISR_TC) == 0U) 
+	while((pI2C->ISR & I2C_ISR_TC) == 0U) 
 	{
 		/* Check if a NACK is detected */
-		nack_state = I2C_IsAcknowledgeFailed(pHI2C->pI2C);
+		nack_state = I2C_IsAcknowledgeFailed(pI2C);
 		
 		if(nack_state == I2C_STATE_NOT_NACK)
 		{
 			/* Check for the Timeout */
 			if(timeout < TIMEOUT_AUTOEND_STOP)timeout++;
-			else return I2C_STATE_TIMEOUT_AUTOEND_STOP;
+			else return I2C_STATE_TIMEOUT_TC;
 		}
-		else return nack_state;  // is error state: I2C_STATE_TIMEOUT_NACK_STOP, I2C_STATE_NACK_STOP
+		else // NACK is detected
+		{
+			return nack_state;  // is error state: I2C_STATE_TIMEOUT_NACK_STOP, I2C_STATE_NACK_STOP
+		}
 	}
 	
 	// TC is set, memory address pointer is set
-	return I2C_STATE_TRANSFER_DONE;
+	// next steps: restart by reading or writing
+	return I2C_STATE_MEM_ADR_TRANSFER_DONE;
 
 
 }

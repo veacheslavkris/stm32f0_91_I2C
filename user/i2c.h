@@ -35,10 +35,12 @@
 typedef enum
 {
 	I2C_STATE_TRANSFER_DONE,
+	I2C_STATE_MEM_ADR_TRANSFER_DONE,
 	I2C_STATE_TIMEOUT_AUTOEND_STOP,
 	I2C_STATE_TIMEOUT_NACK_STOP,
 	I2C_STATE_TIMEOUT_RXNE,
 	I2C_STATE_TIMEOUT_TXIS,
+	I2C_STATE_TIMEOUT_TC,
 	I2C_STATE_NOT_NACK,
 	I2C_STATE_NACK_STOP,
 	I2C_STATE_RXNE,
@@ -138,7 +140,7 @@ __STATIC_INLINE I2CStateEnum I2C_IsAcknowledgeFailed(I2C_TypeDef* pI2C)
 }
 //
 
-I2CStateEnum I2C_EEPROM_SetMemAddress(I2CStructHandle* pHI2C);
+I2CStateEnum I2C_EEPROM_SetMemAddress(I2C_TypeDef* pI2C, uint32_t i2c_address, uint32_t size_address, uint8_t* p_address);
 
 
 

@@ -90,10 +90,52 @@ int main(void)
 //			}
 //			else show_err_on_display_0();
 			
+			volatile I2CStructHandle* eepromHandle;
+
+			I2CStateEnum status;
+			
+			volatile uint8_t* p_rx_buff;
+			volatile uint8_t* p_tx_buff;
+			
+			uint32_t count = 20;
+			
+			eepromHandle = EEPROM_GetHandle();
+			
+			EEPROM_ClearRxTxBuffers();
+
+//			p_rx_buff = EEPROM_GetRxBufferArray();
+//			p_tx_buff = EEPROM_GetTxBufferArray();
+//			
+//			eepromHandle->TxBuff.p_ary_data[10]=0xAA;
+//			eepromHandle->TxBuff.p_ary_data[11]=0xAA;
+//			eepromHandle->TxBuff.p_ary_data[12]=0xAA;
+//			eepromHandle->TxBuff.p_ary_data[13]=0xAA;
+//			eepromHandle->TxBuff.p_ary_data[14]=0xAA;
+//			eepromHandle->TxBuff.p_ary_data[15]=0xAA;
+//			eepromHandle->TxBuff.p_ary_data[16]=0xAA;
+//			eepromHandle->TxBuff.p_ary_data[17]=0xAA;
+//			eepromHandle->TxBuff.p_ary_data[18]=0xAA;
+//			eepromHandle->TxBuff.p_ary_data[19]=0xAA;
+//			eepromHandle->TxBuff.p_ary_data[20]=0xAA;
+//			eepromHandle->TxBuff.p_ary_data[21]=0xAA;
+//			eepromHandle->TxBuff.p_ary_data[22]=0xAA;
+//			eepromHandle->TxBuff.p_ary_data[23]=0xAA;
+//			eepromHandle->TxBuff.p_ary_data[24]=0xAA;
+//			eepromHandle->TxBuff.p_ary_data[25]=0xAA;
+//			eepromHandle->TxBuff.p_ary_data[26]=0xAA;
+//			eepromHandle->TxBuff.p_ary_data[27]=0xAA;
+//			eepromHandle->TxBuff.p_ary_data[28]=0xAA;
+//			eepromHandle->TxBuff.p_ary_data[29]=0xAA;
+//			
+//			status =EEPROM_Write(10, 20);			
 			
 			
+			status =  EEPROM_Read(10, 20);
 			
-			I2CStructHandle* result =  EEPROM_2Kb_Read(10, 20);
+			p_rx_buff = EEPROM_GetRxBufferArray();
+			
+
+			
 			
 			state_run = 0;
 		}

@@ -11,6 +11,8 @@
 
 #define I2C				I2C2
 
+
+
 __STATIC_INLINE void i2c_init(void)
 {
 	RCC->AHBENR |= RCC_AHBENR_GPIOBEN;
@@ -28,7 +30,14 @@ __STATIC_INLINE void i2c_init(void)
 
 void EEPROM_2Kb_Init(void);
 
-I2CStructHandle* EEPROM_2Kb_Read(uint32_t start_pos, uint32_t count);
+I2CStateEnum EEPROM_Read(uint32_t start_pos, uint32_t count);
+I2CStateEnum EEPROM_Write(uint32_t start_pos, uint32_t count_for_write);
+
+uint8_t* EEPROM_GetRxBufferArray(void);
+uint8_t* EEPROM_GetTxBufferArray(void);
+
+void EEPROM_ClearRxTxBuffers(void);
+I2CStructHandle* EEPROM_GetHandle(void);
 
 
 #endif
