@@ -31,6 +31,7 @@
 
 #define TIMEOUT_I2C				1000
 
+#define IS_TIMEOUT_DONE		(timeout-- == 0)
 
 typedef enum
 {
@@ -101,8 +102,10 @@ __STATIC_INLINE void clear_buffer(I2CStructData* pI2CStructData)
 
 __STATIC_INLINE I2CStateEnum I2C_IsAcknowledgeFailed(I2C_TypeDef* pI2C)
 {
-	uint32_t timout = 0;
+//	uint32_t timeout = 0;
+	uint32_t timeout = TIMEOUT_NACK_STOP;
 
+	
 	if((pI2C->ISR & I2C_ISR_NACKF) == I2C_ISR_NACKF)
 	{
 		/* Wait until STOP Flag is reset */
@@ -110,15 +113,21 @@ __STATIC_INLINE I2CStateEnum I2C_IsAcknowledgeFailed(I2C_TypeDef* pI2C)
 		while((pI2C->ISR & I2C_ISR_STOPF) == 0U)
 		{
 			/* Check for the Timeout */
-			if(timout < TIMEOUT_NACK_STOP) timout++;
-			else return I2C_STATE_TIMEOUT_NACK_STOP;
+//			if(timout < TIMEOUT_NACK_STOP) timout++;
+//			else return I2C_STATE_TIMEOUT_NACK_STOP;
+			
+//			if(timout-- == 0) return I2C_STATE_TIMEOUT_NACK_STOP;
+			if(IS_TIMEOUT_DONE) return I2C_STATE_TIMEOUT_NACK_STOP;
+			
 		}
 
 		/* Clear NACKF Flag */
-		pI2C->ICR|=I2C_ICR_NACKCF;
-
+//		pI2C->ICR|=I2C_ICR_NACKCF;
+		
+		pI2C->ICR|=I2C_ICR_NACKCF|I2C_ICR_STOPCF;
+		
 		/* Clear STOP Flag */
-		pI2C->ICR|=I2C_ICR_STOPCF;
+//		pI2C->ICR|=I2C_ICR_STOPCF;
 		
 		/* Flush TX register */
 		if(pI2C->ISR & I2C_ISR_TXIS)

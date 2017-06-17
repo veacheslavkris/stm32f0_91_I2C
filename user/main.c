@@ -103,7 +103,7 @@ int main(void)
 			
 			EEPROM_ClearRxTxBuffers();
 
-//			p_rx_buff = EEPROM_GetRxBufferArray();
+			p_rx_buff = EEPROM_GetRxBufferArray();
 //			p_tx_buff = EEPROM_GetTxBufferArray();
 //			
 //			eepromHandle->TxBuff.p_ary_data[10]=0xAA;
@@ -132,7 +132,7 @@ int main(void)
 			
 			status =  EEPROM_Read(10, 20);
 			
-			p_rx_buff = EEPROM_GetRxBufferArray();
+//			p_rx_buff = EEPROM_GetRxBufferArray();
 			
 
 			
