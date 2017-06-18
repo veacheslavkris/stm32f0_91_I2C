@@ -97,7 +97,7 @@ int main(void)
 			volatile uint8_t* p_rx_buff;
 			volatile uint8_t* p_tx_buff;
 			
-			uint32_t count = 20;
+//			uint32_t count = 20;
 			
 			eepromHandle = EEPROM_GetHandle();
 			
@@ -132,9 +132,6 @@ int main(void)
 			
 			status =  EEPROM_Read(10, 20);
 			
-//			p_rx_buff = EEPROM_GetRxBufferArray();
-			
-
 			
 			
 			state_run = 0;

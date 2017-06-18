@@ -62,7 +62,7 @@ I2CStateEnum EEPROM_Write(uint32_t start_pos, uint32_t count_for_write)
 
 	handleI2C_EEPROM.TxBuff.transfer_size = count_for_write;
 
-	state =  I2C_EEPROM_SetMemAddress(handleI2C_EEPROM.pI2C, handleI2C_EEPROM.devAddress, cnt_bytes_mem_address, ary_mem_address);
+	state =  I2C_EEPROM_SetMemAddress_2(handleI2C_EEPROM.pI2C, handleI2C_EEPROM.devAddress, cnt_bytes_mem_address, ary_mem_address);
 	
 	if(state == I2C_STATE_MEM_ADR_TRANSFER_DONE)
 	{
