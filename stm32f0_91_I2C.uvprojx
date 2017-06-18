@@ -450,9 +450,9 @@
               <FilePath>.\user\TMP275.c</FilePath>
             </File>
             <File>
-              <FileName>eeprom_2Kb.c</FileName>
+              <FileName>eeprom.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\user\eeprom_2Kb.c</FilePath>
+              <FilePath>.\user\eeprom.c</FilePath>
             </File>
           </Files>
         </Group>

@@ -150,106 +150,50 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>137</LineNumber>
+          <LineNumber>116</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134221628</Address>
+          <Address>0</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
+          <BreakIfRCount>0</BreakIfRCount>
           <Filename>.\user\main.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\stm32f0_91_I2C\user/main.c\137</Expression>
-        </Bp>
-        <Bp>
-          <Number>1</Number>
-          <Type>0</Type>
-          <LineNumber>133</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>134221618</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>.\user\main.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression>\\stm32f0_91_I2C\user/main.c\133</Expression>
+          <Expression></Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>
         <Ww>
           <count>0</count>
           <WinNumber>1</WinNumber>
-          <ItemText>cur_temp</ItemText>
+          <ItemText>state_run</ItemText>
         </Ww>
         <Ww>
           <count>1</count>
           <WinNumber>1</WinNumber>
-          <ItemText>state_run</ItemText>
+          <ItemText>structFloatToBcd</ItemText>
         </Ww>
         <Ww>
           <count>2</count>
           <WinNumber>1</WinNumber>
-          <ItemText>structFloatToBcd</ItemText>
+          <ItemText>status</ItemText>
         </Ww>
         <Ww>
           <count>3</count>
           <WinNumber>1</WinNumber>
-          <ItemText>pHI2C</ItemText>
+          <ItemText>eepromHandle</ItemText>
         </Ww>
         <Ww>
           <count>4</count>
           <WinNumber>1</WinNumber>
-          <ItemText>i2c_state</ItemText>
+          <ItemText>eeprom_ary_rx_buff</ItemText>
         </Ww>
         <Ww>
           <count>5</count>
           <WinNumber>1</WinNumber>
-          <ItemText>state</ItemText>
-        </Ww>
-        <Ww>
-          <count>6</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>status</ItemText>
-        </Ww>
-        <Ww>
-          <count>7</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>eepromHandle</ItemText>
-        </Ww>
-        <Ww>
-          <count>8</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>p_rx_buff[5]</ItemText>
-        </Ww>
-        <Ww>
-          <count>9</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>p_rx_buff[10]</ItemText>
-        </Ww>
-        <Ww>
-          <count>10</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>p_rx_buff[19]</ItemText>
-        </Ww>
-        <Ww>
-          <count>11</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>p_rx_buff[20]</ItemText>
-        </Ww>
-        <Ww>
-          <count>12</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>p_rx_buff[50]</ItemText>
-        </Ww>
-        <Ww>
-          <count>13</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>eeprom_ary_rx_buff</ItemText>
+          <ItemText>eeprom_ary_tx_buff</ItemText>
         </Ww>
       </WatchWindow1>
       <Tracepoint>
@@ -477,11 +421,11 @@
       <GroupNumber>1</GroupNumber>
       <FileNumber>15</FileNumber>
       <FileType>1</FileType>
-      <tvExp>1</tvExp>
+      <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>.\user\eeprom_2Kb.c</PathWithFileName>
-      <FilenameWithoutPath>eeprom_2Kb.c</FilenameWithoutPath>
+      <PathWithFileName>.\user\eeprom.c</PathWithFileName>
+      <FilenameWithoutPath>eeprom.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>

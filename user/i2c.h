@@ -24,7 +24,7 @@
 
 #define TIMEOUT_AUTOEND_STOP	1000
 #define TIMEOUT_RXNE			1000
-#define TIMEOUT_TXIS			1000
+#define TIMEOUT_TXIS			100000
 #define TIMEOUT_TC				1000
 
 #define TIMEOUT_NACK			1000
@@ -32,7 +32,10 @@
 
 #define TIMEOUT_I2C				1000
 
-#define IS_TIMEOUT_DONE		(timeout-- == 0)
+#define IS_END_TIMEOUT_DEC		(--timeout == 0U)
+#define HAS_TIMEOUT_TICKS			(--timeout > 0U)
+
+#define IS_TIMEOUT_ZERO				(timeout == 0U)
 
 #define CLEAR_STOP_FLAG		(pI2C->ICR|=I2C_ICR_STOPCF)
 
@@ -131,7 +134,7 @@ __STATIC_INLINE uint32_t wait_flag_timeout(I2C_TypeDef* pI2C, uint32_t flag, uin
 {
 	while((pI2C->ISR & flag) == 0U)
 	{
-		if(cnt_steps-- == 0) return 0;
+		if(--cnt_steps == 0) return 0;
 	}
 	
 	return 1;
@@ -187,7 +190,7 @@ __STATIC_INLINE I2CStateEnum wait_flag_by_nack_timeout(I2C_TypeDef* pI2C, uint32
 {
 	uint32_t stopf_timeout = TIMEOUT_NACK_STOP;
 	
-	while(((pI2C->ISR & flag) == 0U) && (flag_timeout-- > 0))	
+	while(((pI2C->ISR & flag) == 0U) && (--flag_timeout > 0))	
 	{
 		if(IS_NACKF_SET) goto ERROR_NACK;
 	}
@@ -198,7 +201,7 @@ __STATIC_INLINE I2CStateEnum wait_flag_by_nack_timeout(I2C_TypeDef* pI2C, uint32
 	ERROR_NACK:
 				/* Wait until STOP Flag is reset */
 			/* AutoEnd should be initiate after AF */
-			while((IS_STOPF_CLEAR) && (stopf_timeout-- > 0U)) continue;
+			while((IS_STOPF_CLEAR) && (--stopf_timeout > 0U)) continue;
 
 			if(stopf_timeout == 0U) return I2C_STATE_TIMEOUT_NACK_STOP;
 			else // STOPF IS SET
@@ -229,10 +232,10 @@ __STATIC_INLINE I2CStateEnum nack_process(I2C_TypeDef* pI2C)
 	/* Wait until STOP Flag is reset */
 	/* AutoEnd should be initiate after AF */
 	
-	while((IS_STOPF_CLEAR) && (timeout-- > 0U)) continue;
+	while((IS_STOPF_CLEAR) && (--timeout > 0U)) continue;
 
 	if(timeout == 0U) return I2C_STATE_TIMEOUT_NACK_STOP;
-	else // STOPF IS SET
+	else if(IS_STOPF_SET)// STOPF IS SET
 	{
 		/* Clear NACKF Flag, STOP Flag */
 		pI2C->ICR|=I2C_ICR_NACKCF|I2C_ICR_STOPCF;
@@ -247,6 +250,8 @@ __STATIC_INLINE I2CStateEnum nack_process(I2C_TypeDef* pI2C)
 		
 		return I2C_STATE_NACK_STOP;
 	}
+	else return I2C_STATE_TIMEOUT_AUTOEND_STOP;
+	
 
 }
 

@@ -47,15 +47,15 @@ int main(void)
 	/* MAX 7219 */ 
 	Max7219_Init();
 
-	Max7219_ClearAllDigits();
+//	Max7219_ClearAllDigits();
 	
 	DelaySystick(1000);
 	
-	Max7219_ShowAtPositionNumber(11, 0);
+//	Max7219_ShowAtPositionNumber(11, 0);
 
-	DelaySystick(2000);
-	Max7219_ShowAtPositionNumber(0, 15);
-	DelaySystick(2000);
+//	DelaySystick(2000);
+//	Max7219_ShowAtPositionNumber(0, 15);
+//	DelaySystick(2000);
 
 	Max7219_ClearAllDigits();
 
@@ -96,41 +96,32 @@ int main(void)
 			
 			volatile uint8_t* p_rx_buff;
 			volatile uint8_t* p_tx_buff;
-			
-//			uint32_t count = 20;
+			uint32_t start_address_pos = 60;
+			uint32_t count = 11;
+			uint32_t ix = 0;
 			
 			eepromHandle = EEPROM_GetHandle();
 			
 			EEPROM_ClearRxTxBuffers();
 
 			p_rx_buff = EEPROM_GetRxBufferArray();
-//			p_tx_buff = EEPROM_GetTxBufferArray();
-//			
-//			eepromHandle->TxBuff.p_ary_data[10]=0xAA;
-//			eepromHandle->TxBuff.p_ary_data[11]=0xAA;
-//			eepromHandle->TxBuff.p_ary_data[12]=0xAA;
-//			eepromHandle->TxBuff.p_ary_data[13]=0xAA;
-//			eepromHandle->TxBuff.p_ary_data[14]=0xAA;
-//			eepromHandle->TxBuff.p_ary_data[15]=0xAA;
-//			eepromHandle->TxBuff.p_ary_data[16]=0xAA;
-//			eepromHandle->TxBuff.p_ary_data[17]=0xAA;
-//			eepromHandle->TxBuff.p_ary_data[18]=0xAA;
-//			eepromHandle->TxBuff.p_ary_data[19]=0xAA;
-//			eepromHandle->TxBuff.p_ary_data[20]=0xAA;
-//			eepromHandle->TxBuff.p_ary_data[21]=0xAA;
-//			eepromHandle->TxBuff.p_ary_data[22]=0xAA;
-//			eepromHandle->TxBuff.p_ary_data[23]=0xAA;
-//			eepromHandle->TxBuff.p_ary_data[24]=0xAA;
-//			eepromHandle->TxBuff.p_ary_data[25]=0xAA;
-//			eepromHandle->TxBuff.p_ary_data[26]=0xAA;
-//			eepromHandle->TxBuff.p_ary_data[27]=0xAA;
-//			eepromHandle->TxBuff.p_ary_data[28]=0xAA;
-//			eepromHandle->TxBuff.p_ary_data[29]=0xAA;
-//			
-//			status =EEPROM_Write(10, 20);			
+			p_tx_buff = EEPROM_GetTxBufferArray();
 			
+			for(ix = 2; ix < count+2; ix++)
+			{
+				eepromHandle->TxBuff.p_ary_data[ix]=0xCC;
+
+			}
 			
-			status =  EEPROM_Read(10, 20);
+//			status = EEPROM_Write(start_address_pos, count);			
+			
+			EEPROM_ClearRxTxBuffers();
+			
+			DelaySystick(1000);
+
+
+			
+			status =  EEPROM_Read(0, 100);
 			
 			
 			

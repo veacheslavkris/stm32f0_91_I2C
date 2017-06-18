@@ -1,5 +1,5 @@
-#ifndef EEPROM_2KB_H
-#define EEPROM_2KB_H
+#ifndef EEPROM_H
+#define EEPROM_H
 
 #include "i2c.h"
 #include "gpio.h"

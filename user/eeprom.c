@@ -1,4 +1,4 @@
-#include "eeprom_2Kb.h"
+#include "eeprom.h"
 
 #define EEPROM_ADDRESS	(uint32_t)0x50
 
@@ -57,17 +57,13 @@ I2CStateEnum EEPROM_Write(uint32_t start_pos, uint32_t count_for_write)
 	I2CStateEnum state;
 	
 	// start position for writing
-	ary_mem_address[1] = (uint8_t)start_pos;
-	ary_mem_address[0] = (uint8_t)(start_pos >> 8);
+	handleI2C_EEPROM.TxBuff.p_ary_data[1] = (uint8_t)start_pos;
+	handleI2C_EEPROM.TxBuff.p_ary_data[0] = (uint8_t)(start_pos >> 8);
 
-	handleI2C_EEPROM.TxBuff.transfer_size = count_for_write;
-
-	state =  I2C_EEPROM_SetMemAddress_2(handleI2C_EEPROM.pI2C, handleI2C_EEPROM.devAddress, cnt_bytes_mem_address, ary_mem_address);
+	handleI2C_EEPROM.TxBuff.transfer_size = count_for_write + 2;
 	
-	if(state == I2C_STATE_MEM_ADR_TRANSFER_DONE)
-	{
-		state = HAL_I2C_Master_Transmit(&handleI2C_EEPROM);
-	}
+
+	state = HAL_I2C_Master_Transmit(&handleI2C_EEPROM);
 	
 	return state;
 }
