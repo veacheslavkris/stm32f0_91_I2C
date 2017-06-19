@@ -68,7 +68,6 @@ void I2C_TransferConfig(I2C_TypeDef* pI2C,  uint16_t DevAddress, uint8_t Size, u
 I2CStateEnum HAL_I2C_Master_Receive(I2CStructHandle* pHI2C)
 {
 	uint32_t timeout = 0;
-	I2CStateEnum nack_state;
 	I2C_TypeDef* pI2C = pHI2C->pI2C;
 	
 	/* Prepare transfer parameters */
@@ -77,59 +76,45 @@ I2CStateEnum HAL_I2C_Master_Receive(I2CStructHandle* pHI2C)
 	/* Send Slave Address */
 	I2C_TransferConfig(pI2C, pHI2C->devAddress, pHI2C->RxBuff.transfer_size, I2C_AUTOEND_MODE, I2C_GENERATE_START_READ);
 
-	timeout = TIMEOUT_RXNE;
-	
-	/* Wait until RXNE flag is set */
-	while(IS_RXNE_CLEAR)
-	{
-		/* Check only one first time if a NACK is detected */
-		nack_state = I2C_IsAcknowledgeFailed(pHI2C->pI2C);
-	
-		if(nack_state == I2C_STATE_NOT_NACK)
-		{
-			if(IS_END_TIMEOUT_DEC) return I2C_STATE_TIMEOUT_RXNE; 
-		}
-		else return nack_state; // is error state: I2C_STATE_TIMEOUT_NACK_STOP, I2C_STATE_NACK_STOP
-	}
-
-	/* Read data from RXDR */
-	pHI2C->RxBuff.p_ary_data[pHI2C->RxBuff.ix_ary++] = pHI2C->pI2C->RXDR;
-	pHI2C->RxBuff.transfer_size--;
-		
 	while(pHI2C->RxBuff.transfer_size > 0U)
 	{
 		timeout = TIMEOUT_RXNE;
 		
 		/* Wait until RXNE flag is set */
-		while(IS_RXNE_CLEAR)	
+		while((IS_RXNE_CLEAR) && (HAS_TIMEOUT_TICKS))	
 		{
-			if(IS_END_TIMEOUT_DEC) return I2C_STATE_TIMEOUT_RXNE; 
+				/* Check if a NACK is detected */
+				if(IS_NACKF_SET) return nack_process(pI2C);
 		}
-
-		/* Read data from RXDR */
-		pHI2C->RxBuff.p_ary_data[pHI2C->RxBuff.ix_ary++] = pHI2C->pI2C->RXDR;
-		pHI2C->RxBuff.transfer_size--;
+		
+		if(IS_TIMEOUT_ZERO)return I2C_STATE_TIMEOUT_RXNE; 
+		else
+		{	
+			/* Read data from RXDR */
+			pHI2C->RxBuff.p_ary_data[pHI2C->RxBuff.ix_ary++] = pHI2C->pI2C->RXDR;
+			pHI2C->RxBuff.transfer_size--;
+		}
 	}
 
 	timeout = TIMEOUT_AUTOEND_STOP;
 	
 	/* No need to Check TC flag, with AUTOEND mode the stop is automatically generated */
 	/* Wait until STOPF flag is set */
-	while(IS_STOPF_CLEAR)	
+	while((IS_STOPF_CLEAR) && (HAS_TIMEOUT_TICKS))	continue;
+	
+	if(IS_TIMEOUT_ZERO)return I2C_STATE_TIMEOUT_AUTOEND_STOP;
+	else
 	{
-		if(IS_END_TIMEOUT_DEC)return I2C_STATE_TIMEOUT_AUTOEND_STOP;
+		/* Clear STOP Flag */
+		CLEAR_STOP_FLAG;
+		
+		/* Clear Configuration Register 2 */
+		CLEAR_CR2;
+	
+		return I2C_STATE_TRANSFER_DONE;
 	}
-
-	/* Clear STOP Flag */
-	CLEAR_STOP_FLAG;
-	
-	/* Clear Configuration Register 2 */
-	CLEAR_CR2;
-	
-	return I2C_STATE_TRANSFER_DONE;
 }
 //
-//		while((IS_TXIS_CLEAR) && (--timeout > 0U))
 I2CStateEnum HAL_I2C_Master_Transmit(I2CStructHandle* pHI2C)
 {
 	I2C_TypeDef* pI2C = pHI2C->pI2C;
@@ -186,67 +171,6 @@ I2CStateEnum HAL_I2C_Master_Transmit(I2CStructHandle* pHI2C)
 }
 //
 
-I2CStateEnum HAL_I2C_Master_Transmit_2(I2CStructHandle* pHI2C)
-{
-	uint32_t timeout;
-	I2CStateEnum nack_state;
-	I2C_TypeDef* pI2C = pHI2C->pI2C;
-	
-	pHI2C->TxBuff.ix_ary = 0;
-		
-	I2C_TransferConfig(pHI2C->pI2C, pHI2C->devAddress, pHI2C->TxBuff.transfer_size, I2C_AUTOEND_MODE, I2C_GENERATE_START_WRITE);
-
-	timeout = TIMEOUT_TXIS;
-
-	while(pHI2C->TxBuff.transfer_size > 0U)
-	{
-		/* Wait until TXIS flag is set */
-		while(IS_TXIS_CLEAR)	
-		{
-			/* Check if a NACK is detected */
-			nack_state = I2C_IsAcknowledgeFailed(pHI2C->pI2C);
-			
-			if(nack_state == I2C_STATE_NOT_NACK)
-			{
-					if(IS_END_TIMEOUT_DEC) return I2C_STATE_TIMEOUT_TXIS;
-			}
-			else
-			{
-				return nack_state;  // is error state: I2C_STATE_TIMEOUT_NACK_STOP, I2C_STATE_NACK_STOP
-			}
-		}
-		
-		/* Write data to TXDR */
-		pHI2C->pI2C->TXDR	= pHI2C->TxBuff.p_ary_data[pHI2C->TxBuff.ix_ary++];
-		pHI2C->TxBuff.transfer_size--;
-	}
-
-	timeout = TIMEOUT_AUTOEND_STOP;
-	
-	/* No need to Check TC flag, with AUTOEND mode the stop is automatically generated */
-	/* Wait until STOPF flag is set */
-	while(IS_STOPF_CLEAR)
-	{
-		/* Check if a NACK is detected */
-			nack_state = I2C_IsAcknowledgeFailed(pHI2C->pI2C);
-			
-			if(nack_state == I2C_STATE_NOT_NACK)
-			{
-				if(IS_END_TIMEOUT_DEC) return I2C_STATE_TIMEOUT_AUTOEND_STOP;
-			}
-			else return nack_state;  // is error state: I2C_STATE_TIMEOUT_NACK_STOP, I2C_STATE_NACK_STOP
-	}
-
-	/* Clear STOP Flag */
-	CLEAR_STOP_FLAG;
-
-	/* Clear Configuration Register 2 */
-	CLEAR_CR2;
-	
-	return I2C_STATE_TRANSFER_DONE;
-}
-//
-
 I2CStateEnum I2C_EEPROM_SetMemAddress(I2C_TypeDef* pI2C, uint32_t i2c_address, uint32_t cnt_bytes_mem_address, uint8_t* p_mem_address)
 {
 	uint32_t timeout;
@@ -292,118 +216,11 @@ I2CStateEnum I2C_EEPROM_SetMemAddress(I2C_TypeDef* pI2C, uint32_t i2c_address, u
 }
 //
 
-I2CStateEnum I2C_EEPROM_SetMemAddress_2(I2C_TypeDef* pI2C, uint32_t i2c_address, uint32_t cnt_bytes_mem_address, uint8_t* p_mem_address)
-{
-	I2CStateEnum state;
-	
-	// send start and address
-	I2C_TransferConfig(pI2C, i2c_address, cnt_bytes_mem_address, I2C_SOFTEND_MODE, I2C_GENERATE_START_WRITE);
-	
-	// transfer bytes_mem_address
-	while(cnt_bytes_mem_address > 0U)
-	{
-		/* Wait until TXIS flag is set */
-		
-		//return: I2C_STATE_TIMEOUT_FLAG, I2C_STATE_FLAG_SET, I2C_STATE_TIMEOUT_NACK_STOP, I2C_STATE_NACK_STOP
-		state =  wait_flag_by_nack_timeout(pI2C, I2C_ISR_TXIS, TIMEOUT_TXIS);
-		
-		if(state == I2C_STATE_FLAG_SET)
-		{
-			/* Write data to TXDR */
-			pI2C->TXDR	= (*p_mem_address++);
-			cnt_bytes_mem_address--;
-		}
-		else // ERRORS: I2C_STATE_TIMEOUT_FLAG, I2C_STATE_TIMEOUT_NACK_STOP, I2C_STATE_NACK_STOP
-		{		
-			if(state == I2C_STATE_TIMEOUT_FLAG) state = I2C_STATE_TIMEOUT_TXIS;
-			
-			return state;
-		}
-	}
-	
-	// one or two bytes of mem address is transfered
-	
-	/* Need to check TC flag, while SOFTEND mode is set */
-	/* Wait until TC flag is set */
-	
-	//return: I2C_STATE_TIMEOUT_FLAG, I2C_STATE_FLAG_SET, I2C_STATE_TIMEOUT_NACK_STOP, I2C_STATE_NACK_STOP
-	state =  wait_flag_by_nack_timeout(pI2C, I2C_ISR_TC, TIMEOUT_TC);
-	
-	if(state == I2C_STATE_TIMEOUT_FLAG) state = I2C_STATE_TIMEOUT_TC;
-	else if(state == I2C_STATE_FLAG_SET) state = I2C_STATE_MEM_ADR_TRANSFER_DONE;
-	
-	return state;
-	
-	// next steps: restart by reading or writing
-	
-
-
-}
 
 
 
 
-I2CStateEnum I2C_EEPROM_SetMemAddress_3(I2C_TypeDef* pI2C, uint32_t i2c_address, uint32_t cnt_bytes_mem_address, uint8_t* p_mem_address)
-{
-	uint32_t timeout;
-	I2CStateEnum nack_state;
-	
-	// send start and address
-	I2C_TransferConfig(pI2C, i2c_address, cnt_bytes_mem_address, I2C_SOFTEND_MODE, I2C_GENERATE_START_WRITE);
-	
-	timeout = TIMEOUT_TXIS;
-	
-	// transfer bytes_mem_address
-	while(cnt_bytes_mem_address > 0U)
-	{
-		/* Wait until TXIS flag is set */
-		while(IS_TXIS_CLEAR)	
-		{
-			/* Check if a NACK is detected */
-			nack_state = I2C_IsAcknowledgeFailed(pI2C);
-			
-			if(nack_state == I2C_STATE_NOT_NACK)
-			{
-				if(IS_END_TIMEOUT_DEC) return I2C_STATE_TIMEOUT_TXIS;
-			}
-			else // NACK is detected
-			{		
-				return nack_state;  // is error state: I2C_STATE_TIMEOUT_NACK_STOP, I2C_STATE_NACK_STOP
-			}
-		}
-		
-		/* Write data to TXDR */
-		pI2C->TXDR	= (*p_mem_address++);
-		cnt_bytes_mem_address--;
-	}
-	
-	// one or two bytes of mem address is transfered
-	
-	timeout = TIMEOUT_AUTOEND_STOP;
-	
-	/* Need to check TC flag, while SOFTEND mode is set */
-	/* Wait until TC flag is set */
-	while(IS_TC_CLEAR)		
-	{
-		/* Check if a NACK is detected */
-		nack_state = I2C_IsAcknowledgeFailed(pI2C);
-		
-		if(nack_state == I2C_STATE_NOT_NACK)
-		{
-			if(IS_END_TIMEOUT_DEC) return I2C_STATE_TIMEOUT_TC;
-		}
-		else // NACK is detected
-		{
-			return nack_state;  // is error state: I2C_STATE_TIMEOUT_NACK_STOP, I2C_STATE_NACK_STOP
-		}
-	}
-	
-	// TC is set, memory address pointer is set
-	// next steps: restart by reading or writing
-	return I2C_STATE_MEM_ADR_TRANSFER_DONE;
 
-
-}
 
 
 

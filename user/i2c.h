@@ -108,8 +108,6 @@ void I2C_ConfigTimingPe(I2C_TypeDef* pI2C);
 
 void I2C_TransferConfig(I2C_TypeDef* pI2C,  uint16_t DevAddress, uint8_t Size, uint32_t Mode, uint32_t Request);
 
-I2CStateEnum I2C_IsAcknowledgeFailed(I2C_TypeDef* pI2C);
-
 I2CStateEnum HAL_I2C_Master_Receive(I2CStructHandle* pHI2C);
 
 I2CStateEnum HAL_I2C_Master_Transmit(I2CStructHandle* pHI2C);
@@ -130,100 +128,6 @@ __STATIC_INLINE void clear_buffer(I2CStructData* pI2CStructData)
 }
 //
 
-__STATIC_INLINE uint32_t wait_flag_timeout(I2C_TypeDef* pI2C, uint32_t flag, uint32_t cnt_steps)
-{
-	while((pI2C->ISR & flag) == 0U)
-	{
-		if(--cnt_steps == 0) return 0;
-	}
-	
-	return 1;
-
-}
-//
-
-__STATIC_INLINE I2CStateEnum I2C_IsAcknowledgeFailed(I2C_TypeDef* pI2C)
-{
-//	uint32_t timeout = TIMEOUT_NACK_STOP;
-	
-	if(IS_NACKF_SET)
-	{
-		/* Wait until STOP Flag is reset */
-		/* AutoEnd should be initiate after AF */
-//		while(!IS_STOPF_SET)
-//		{
-//			if(IS_TIMEOUT_DONE) return I2C_STATE_TIMEOUT_NACK_STOP;
-//		}
-		
-		if(!wait_flag_timeout(pI2C, I2C_ISR_STOPF, TIMEOUT_NACK_STOP))
-		{
-			return I2C_STATE_TIMEOUT_NACK_STOP;
-		}
-	
-		/* Clear NACKF Flag, STOP Flag */
-		pI2C->ICR|=I2C_ICR_NACKCF|I2C_ICR_STOPCF;
-		
-		/* Flush TX register */
-		if(pI2C->ISR & I2C_ISR_TXIS)
-		{
-			pI2C->TXDR = 0U;
-		}
-		
-		if((pI2C->ISR & I2C_ISR_TXE) == 0U)
-		{
-			pI2C->ISR|=I2C_ISR_TXE;
-		}
-
-		/* Clear Configuration Register 2 */
-		CLEAR_CR2;
-		
-		return I2C_STATE_NACK_STOP;
-	}
-	else
-	{
-		return I2C_STATE_NOT_NACK;
-	}
-}
-//
-
-__STATIC_INLINE I2CStateEnum wait_flag_by_nack_timeout(I2C_TypeDef* pI2C, uint32_t flag, uint32_t flag_timeout)
-{
-	uint32_t stopf_timeout = TIMEOUT_NACK_STOP;
-	
-	while(((pI2C->ISR & flag) == 0U) && (--flag_timeout > 0))	
-	{
-		if(IS_NACKF_SET) goto ERROR_NACK;
-	}
-	
-	if(flag_timeout == 0U) return I2C_STATE_TIMEOUT_FLAG;
-	else return I2C_STATE_FLAG_SET;
-	
-	ERROR_NACK:
-				/* Wait until STOP Flag is reset */
-			/* AutoEnd should be initiate after AF */
-			while((IS_STOPF_CLEAR) && (--stopf_timeout > 0U)) continue;
-
-			if(stopf_timeout == 0U) return I2C_STATE_TIMEOUT_NACK_STOP;
-			else // STOPF IS SET
-			{
-				/* Clear NACKF Flag, STOP Flag */
-				pI2C->ICR|=I2C_ICR_NACKCF|I2C_ICR_STOPCF;
-				
-				/* Flush TX register */
-				if(IS_TXIS_SET) pI2C->TXDR = 0U;
-							
-				if(IS_TXE_CLEAR) pI2C->ISR|=I2C_ISR_TXE;
-				
-				/* Clear Configuration Register 2 */
-				CLEAR_CR2;
-				
-				return I2C_STATE_NACK_STOP;
-			}
-
-}
-//
-//return: I2C_STATE_TIMEOUT_FLAG, I2C_STATE_FLAG_SET, I2C_STATE_TIMEOUT_NACK_STOP, I2C_STATE_NACK_STOP
-
 __STATIC_INLINE I2CStateEnum nack_process(I2C_TypeDef* pI2C)
 {
 	uint32_t timeout = TIMEOUT_AUTOEND_STOP;
@@ -232,10 +136,10 @@ __STATIC_INLINE I2CStateEnum nack_process(I2C_TypeDef* pI2C)
 	/* Wait until STOP Flag is reset */
 	/* AutoEnd should be initiate after AF */
 	
-	while((IS_STOPF_CLEAR) && (--timeout > 0U)) continue;
+	while((IS_STOPF_CLEAR) && (HAS_TIMEOUT_TICKS)) continue;
 
-	if(timeout == 0U) return I2C_STATE_TIMEOUT_NACK_STOP;
-	else if(IS_STOPF_SET)// STOPF IS SET
+	if(IS_TIMEOUT_ZERO) return I2C_STATE_TIMEOUT_NACK_STOP;
+	else // STOPF IS SET
 	{
 		/* Clear NACKF Flag, STOP Flag */
 		pI2C->ICR|=I2C_ICR_NACKCF|I2C_ICR_STOPCF;
@@ -250,14 +154,10 @@ __STATIC_INLINE I2CStateEnum nack_process(I2C_TypeDef* pI2C)
 		
 		return I2C_STATE_NACK_STOP;
 	}
-	else return I2C_STATE_TIMEOUT_AUTOEND_STOP;
-	
 
 }
 
 I2CStateEnum I2C_EEPROM_SetMemAddress(I2C_TypeDef* pI2C, uint32_t i2c_address, uint32_t cnt_bytes_mem_address, uint8_t* p_mem_address);
-I2CStateEnum I2C_EEPROM_SetMemAddress_2(I2C_TypeDef* pI2C, uint32_t i2c_address, uint32_t cnt_bytes_mem_address, uint8_t* p_mem_address);
-I2CStateEnum I2C_EEPROM_SetMemAddress_3(I2C_TypeDef* pI2C, uint32_t i2c_address, uint32_t cnt_bytes_mem_address, uint8_t* p_mem_address);
 
 
 

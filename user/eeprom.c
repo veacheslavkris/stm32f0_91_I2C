@@ -9,8 +9,8 @@ I2CStructHandle handleI2C_EEPROM;
 uint8_t eeprom_ary_rx_buff[BUFF_ARY_SIZE];
 uint8_t eeprom_ary_tx_buff[BUFF_ARY_SIZE];
 
-const uint32_t cnt_bytes_mem_address = 2;
-uint8_t ary_mem_address[cnt_bytes_mem_address];
+const uint32_t SIZE_BYTES_MEM_ADDRESS = 2;
+uint8_t ary_mem_address[SIZE_BYTES_MEM_ADDRESS];
 
 void init_handle_eeprom(void)
 {
@@ -42,7 +42,7 @@ I2CStateEnum EEPROM_Read(uint32_t start_pos, uint32_t count_for_receive)
 
 	handleI2C_EEPROM.RxBuff.transfer_size = count_for_receive;
 
-	state =  I2C_EEPROM_SetMemAddress(handleI2C_EEPROM.pI2C, handleI2C_EEPROM.devAddress, cnt_bytes_mem_address, ary_mem_address);
+	state =  I2C_EEPROM_SetMemAddress(handleI2C_EEPROM.pI2C, handleI2C_EEPROM.devAddress, SIZE_BYTES_MEM_ADDRESS, ary_mem_address);
 	
 	if(state == I2C_STATE_MEM_ADR_TRANSFER_DONE)
 	{

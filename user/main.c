@@ -47,15 +47,15 @@ int main(void)
 	/* MAX 7219 */ 
 	Max7219_Init();
 
-//	Max7219_ClearAllDigits();
+	Max7219_ClearAllDigits();
 	
 	DelaySystick(1000);
 	
-//	Max7219_ShowAtPositionNumber(11, 0);
+	Max7219_ShowAtPositionNumber(11, 0);
 
-//	DelaySystick(2000);
-//	Max7219_ShowAtPositionNumber(0, 15);
-//	DelaySystick(2000);
+	DelaySystick(2000);
+	Max7219_ShowAtPositionNumber(0, 15);
+	DelaySystick(2000);
 
 	Max7219_ClearAllDigits();
 
@@ -96,8 +96,8 @@ int main(void)
 			
 			volatile uint8_t* p_rx_buff;
 			volatile uint8_t* p_tx_buff;
-			uint32_t start_address_pos = 60;
-			uint32_t count = 11;
+			uint32_t start_address_pos = 0;
+			uint32_t count = 70;
 			uint32_t ix = 0;
 			
 			eepromHandle = EEPROM_GetHandle();
@@ -107,17 +107,16 @@ int main(void)
 			p_rx_buff = EEPROM_GetRxBufferArray();
 			p_tx_buff = EEPROM_GetTxBufferArray();
 			
-			for(ix = 2; ix < count+2; ix++)
+			for(ix = 0; ix < count; ix++)
 			{
-				eepromHandle->TxBuff.p_ary_data[ix]=0xCC;
-
+				eepromHandle->TxBuff.p_ary_data[ix + 2]=0xFF;
 			}
 			
-//			status = EEPROM_Write(start_address_pos, count);			
+			status = EEPROM_Write(start_address_pos, count);			
 			
 			EEPROM_ClearRxTxBuffers();
 			
-			DelaySystick(1000);
+			DelaySystick(100);
 
 
 			
